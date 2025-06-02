@@ -4,13 +4,16 @@ body {
 
 }
 
-#board {}
-
-.row {
-    border: 1px solid gray;
-
+#board {
+    display: grid;
 }
+
+/* .row {
+    border: 1px solid gray; 
+
+} */
 
 .box {
     border: 1px solid white;
+    display: flex;
 }
