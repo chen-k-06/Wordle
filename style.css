@@ -11,7 +11,7 @@ body {
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
     gap: 10px;
     margin: 20px auto;
-    width: 450px;
+    width: 420px;
 }
 
 .row {
@@ -21,8 +21,8 @@ body {
 }
 
 .box {
-    width: 75px;
-    height: 75px;
+    width: 70px;
+    height: 70px;
     font-size: 2rem;
     border: 2px solid white;
     display: flex;
