@@ -1,6 +1,8 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: black;
+    text-align: center;
+    color: white;
 }
 
 #board {
@@ -14,7 +16,7 @@ body {
 .row {
     /* border: 1px solid gray;  */
     display: grid;
-
+    grid-template-columns: repeat(5, 1fr);
 }
 
 .box {
@@ -23,4 +25,5 @@ body {
     font-size: 2rem;
     border: 2px solid white;
     display: flex;
+    text-transform: uppercase;
 }
