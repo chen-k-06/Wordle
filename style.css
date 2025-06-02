@@ -24,7 +24,7 @@ body {
     width: 70px;
     height: 70px;
     font-size: 2rem;
-    border: 2px solid white;
+    border: 2px solid gray;
     display: flex;
     text-transform: uppercase;
     align-items: center;
