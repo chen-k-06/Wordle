@@ -3,7 +3,7 @@ body {
     background-color: rgb(29, 29, 27);
     text-align: center;
     color: white;
-    font-size: 5rem;
+    font-size: 2rem;
 }
 
 #board {
@@ -23,7 +23,7 @@ body {
 .box {
     width: 75px;
     height: 75px;
-    font-size: 3rem;
+    font-size: 2rem;
     border: 2px solid white;
     display: flex;
     text-transform: uppercase;
