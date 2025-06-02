@@ -26,4 +26,7 @@ body {
     border: 2px solid white;
     display: flex;
     text-transform: uppercase;
+    align-items: center;
+    justify-content: center;
+    color: white;
 }
