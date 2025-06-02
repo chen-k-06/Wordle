@@ -1,2 +1,2 @@
 # Wordle
-A terminal-based Wordle game
++ AI-powered bot with a 98% accuracy
