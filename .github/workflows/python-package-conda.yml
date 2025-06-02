@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main 
-      
+
 permissions:
   pages: write
   id-token: write
@@ -18,10 +18,11 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Upload static site
-        uses: actions/upload-pages-artifact@v2
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
         with:
-          path: ./  
+          name: github-pages
+          path: ./
 
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v2
+        uses: action
