@@ -1,34 +1,16 @@
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #121213;
-    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: beige;
+
 }
 
-#board {
-    display: grid;
-    grid-template-rows: repeat(6, 1fr);
-    color: white;
-    gap: 10px;
-    margin: 20px auto;
-    width: 300px;
-}
+#board {}
 
 .row {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
+    border: 1px solid gray;
+
 }
 
 .box {
-    width: 50px;
-    height: 50px;
-    border: 2px solid #555;
-    font-size: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-transform: uppercase;
-    background-color: #121213;
-    color: white;
+    border: 1px solid white;
 }
