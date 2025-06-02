@@ -7,6 +7,14 @@ function count(word, x) {
     }
     return count;
 }
+import { get_secret_words } from './wordle_secret_words.js';
+get_secret_words();
+
+function get_secret_word() {
+    let secret_words = get_secret_words()
+    let secret_word = secret_words[Math.floor(Math.random() * secret_words.length)].trim();
+    return secret_word
+}
 
 function checkGuess(secret_word, guess) {
 
