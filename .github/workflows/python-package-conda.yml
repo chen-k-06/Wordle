@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - main 
+      
+permissions:
+  pages: write
+  id-token: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -16,7 +21,7 @@ jobs:
       - name: Upload static site
         uses: actions/upload-pages-artifact@v2
         with:
-          path: ./  # your root folder (HTML, CSS, JS)
+          path: ./  
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v2
