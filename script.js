@@ -17,14 +17,6 @@ function get_secret_word() {
     return secret_word;
 }
 
-function checkGuess(secret_word, guess) {
-
-}
-
-function updateBoard() {
-
-}
-
 function endGame(won) {
     if (!won) {
 
@@ -89,6 +81,7 @@ function get_feedback(secret_word, guess) {
 }
 
 let currentGuess = "";
+let currentRow = 0;
 const MAX_WORD_LENGTH = 5;
 let secretWord = get_secret_word();
 
@@ -99,15 +92,20 @@ document.addEventListener('keydown', function (event) {
             console.log('Submitting guess:', currentGuess);
             let feedback = get_feedback(secretWord, currentGuess);
             console.log('Feedback:', feedback);
+            currentRow++;
             currentGuess = "";
         }
     }
     else if (key === 'Backspace') {
+        let tile = document.getElementById(`row-${currentRow}-col-${currentGuess.length - 1}`);
+        tile.textcontent = ''
         currentGuess = currentGuess.slice(0, -1);
         console.log('Deleted. Current guess:', currentGuess);
     }
     else if (/^[a-zA-Z]$/.test(key)) {
         if (currentGuess.length < maxWordLength) {
+            let tile = document.getElementById(`row-${currentRow}-col-${currentGuess.length - 1}`);
+            tile.textcontent = key.toUpperCase();
             currentGuess += key.toUpperCase();
             console.log('Added letter:', key.toUpperCase(), 'Current guess:', currentGuess);
         }
