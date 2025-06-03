@@ -93,7 +93,7 @@ function updateTile(row, column, letter) {
 document.addEventListener('keydown', function (event) {
     let key = event.key;
     if (key === 'Enter' && secret_words.includes(currentGuess)) {
-        if (currentGuess.length === maxWordLength) {
+        if (currentGuess.length === MAX_WORD_LENGTH) {
             console.log('Submitting guess:', currentGuess);
             let feedback = get_feedback(secretWord, currentGuess);
             console.log('Feedback:', feedback);
@@ -107,7 +107,7 @@ document.addEventListener('keydown', function (event) {
         console.log('Deleted. Current guess:', currentGuess);
     }
     else if (/^[a-zA-Z]$/.test(key)) {
-        if (currentGuess.length < maxWordLength) {
+        if (currentGuess.length < MAX_WORD_LENGTH) {
             updateTile(currentRow, currentGuess.length, key.toUpperCase());
             currentGuess += key.toUpperCase();
             console.log('Added letter:', key.toUpperCase(), 'Current guess:', currentGuess);
