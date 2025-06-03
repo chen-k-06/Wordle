@@ -9,8 +9,7 @@ function count(word, x) {
 }
 
 import { get_secret_words } from './wordle_secret_words.js';
-secret_words = [];
-secret_words = get_secret_words();
+let secret_words = get_secret_words();
 
 function get_secret_word() {
     let secret_words = get_secret_words();
