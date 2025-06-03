@@ -7,8 +7,9 @@ function count(word, x) {
     }
     return count;
 }
+
 import { get_secret_words } from './wordle_secret_words.js';
-get_secret_words();
+secret_words = get_secret_words();
 
 function get_secret_word() {
     let secret_words = get_secret_words();
@@ -24,16 +25,17 @@ function updateBoard() {
 
 }
 
-function handleKeyPress(event) {
-
-}
-
 function endGame(won) {
+    if (!won) {
 
+    }
+    else {
+
+    }
 }
 
 function get_feedback(secret_word, guess) {
-    /*    '''Generates a feedback string based on comparing a 5-letter guess with the secret word. 
+    /* Generates a feedback string based on comparing a 5-letter guess with the secret word. 
        The feedback string uses the following schema: 
         - Correct letter, correct spot: uppercase letter ('A'-'Z')
         - Correct letter, wrong spot: lowercase letter ('a'-'z')
@@ -85,3 +87,29 @@ function get_feedback(secret_word, guess) {
     }
     return output.join('');
 }
+
+let currentGuess = "";
+const MAX_WORD_LENGTH = 5;
+let secretWord = get_secret_word();
+
+document.addEventListener('keydown', function (event) {
+    let key = event.key;
+    if (key === 'Enter' && secret_words.includes(currentGuess)) {
+        if (currentGuess.length === maxWordLength) {
+            console.log('Submitting guess:', currentGuess);
+            let feedback = get_feedback(secretWord, currentGuess);
+            console.log('Feedback:', feedback);
+            currentGuess = "";
+        }
+    }
+    else if (key === 'Backspace') {
+        currentGuess = currentGuess.slice(0, -1);
+        console.log('Deleted. Current guess:', currentGuess);
+    }
+    else if (/^[a-zA-Z]$/.test(key)) {
+        if (currentGuess.length < maxWordLength) {
+            currentGuess += key.toUpperCase();
+            console.log('Added letter:', key.toUpperCase(), 'Current guess:', currentGuess);
+        }
+    }
+})
