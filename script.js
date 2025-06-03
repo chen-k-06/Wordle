@@ -102,7 +102,7 @@ document.addEventListener('keydown', function (event) {
         }
     }
     else if (key === 'Backspace') {
-        updateTile(currentRow, currentGuess.length, '');
+        updateTile(currentRow, currentGuess.length, ' ');
         currentGuess = currentGuess.slice(0, -1);
         console.log('Deleted. Current guess:', currentGuess);
     }
