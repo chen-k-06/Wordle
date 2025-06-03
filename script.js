@@ -85,6 +85,11 @@ let currentRow = 0;
 const MAX_WORD_LENGTH = 5;
 let secretWord = get_secret_word();
 
+function updateTile(row, column, letter) {
+    let tile = document.getElementById(`row-${row}-col-${column}`);
+    tile.textContent = letter
+}
+
 document.addEventListener('keydown', function (event) {
     let key = event.key;
     if (key === 'Enter' && secret_words.includes(currentGuess)) {
@@ -97,15 +102,13 @@ document.addEventListener('keydown', function (event) {
         }
     }
     else if (key === 'Backspace') {
-        let tile = document.getElementById(`row-${currentRow}-col-${currentGuess.length - 1}`);
-        tile.textcontent = ''
+        updateTile(currentRow, currentGuess.length, '');
         currentGuess = currentGuess.slice(0, -1);
         console.log('Deleted. Current guess:', currentGuess);
     }
     else if (/^[a-zA-Z]$/.test(key)) {
         if (currentGuess.length < maxWordLength) {
-            let tile = document.getElementById(`row-${currentRow}-col-${currentGuess.length - 1}`);
-            tile.textcontent = key.toUpperCase();
+            updateTile(currentRow, currentGuess.length, key.toUpperCase());
             currentGuess += key.toUpperCase();
             console.log('Added letter:', key.toUpperCase(), 'Current guess:', currentGuess);
         }
