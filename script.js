@@ -58,7 +58,7 @@ function get_feedback(secret_word, guess) {
 
     let output = ["-", "-", "-", "-", "-"]
     guess = guess.toUpperCase()
-    secret_word = secret_word.toUpperCase()
+    let secret_word = secret_word.toUpperCase()
 
     // check for yellows and greens
     for (let i = 0; i < 5; i++) {
@@ -70,11 +70,11 @@ function get_feedback(secret_word, guess) {
             output[i] = guess[i].toLowerCase();
         }
     }
-    output_upper = output.map(letter => letter.toUpperCase());
+    let output_upper = output.map(letter => letter.toUpperCase());
 
     //check for case where the guess contains more of a specific letter than the secret word
     for (let i = 4; i >= 0; i--) {
-        letter = output[i].toUpperCase();
+        let letter = output[i].toUpperCase();
 
         if ((letter != "-") && (count(output_upper, letter) > count(secret_word, letter)) && (output[i] != output[i].toUpperCase())) {
             output[i] = "-";
