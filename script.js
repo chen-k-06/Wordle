@@ -104,13 +104,13 @@ document.addEventListener('keydown', function (event) {
     else if (key === 'Backspace') {
         event.preventDefault();
 
-        updateTile(currentRow, currentGuess.length, '');
+        updateTile(currentRow, currentGuess.length - 1, '');
         currentGuess = currentGuess.slice(0, -1);
         console.log('Deleted. Current guess:', currentGuess);
     }
     else if (/^[a-zA-Z]$/.test(key)) {
         if (currentGuess.length < MAX_WORD_LENGTH) {
-            updateTile(currentRow, currentGuess.length, key.toUpperCase());
+            updateTile(currentRow, currentGuess.length - 1, key.toUpperCase());
             currentGuess += key.toUpperCase();
             console.log('Added letter:', key.toUpperCase(), 'Current guess:', currentGuess);
         }
