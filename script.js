@@ -97,27 +97,26 @@ function updateTile(row, column, letter) {
 // listens for key presses and responds accordingly-- aka the main game function loop
 document.addEventListener('keydown', function (event) {
     let key = event.key;
-    if (key === 'Enter' && secret_words.includes(currentGuess)) {
-        if (currentGuess.length === MAX_WORD_LENGTH) {
+    if (key === 'Enter') {
+        if (currentGuess != null && currentGuess.length === MAX_WORD_LENGTH && secret_words.includes(currentGuess)) {
             console.log('Submitting guess:', currentGuess);
             let feedback = get_feedback(secretWord, currentGuess);
             console.log('Feedback:', feedback);
+
+            for (let i = 0; i < MAX_WORD_LENGTH; i++) {
+                let tile = document.getElementById(`row-${currentRow}-col-${i}`);
+                if (feedback[i] === '-') {
+                    tile.classList.add('notIncluded');
+                }
+                else if (feedback[i] === feedback[i].toUpperCase()) {
+                    tile.classList.add('correct');
+                }
+                else {
+                    tile.classList.add('included');
+                }
+            }
             if (feedback === feedback.toUpperCase() && count(feedback, '-') === 0) {
                 endGame(true);
-            }
-            else {
-                for (let i = 0; i < MAX_WORD_LENGTH; i++) {
-                    let tile = document.getElementById(`row-${currentRow}-col-${i}`);
-                    if (feedback[i] === '-') {
-                        tile.classList.add('notIncluded');
-                    }
-                    else if (feedback[i] === feedback[i].toUpperCase()) {
-                        tile.classList.add('correct');
-                    }
-                    else {
-                        tile.classList.add('included');
-                    }
-                }
             }
 
             currentRow++;
