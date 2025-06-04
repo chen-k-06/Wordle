@@ -8,15 +8,18 @@ function count(word, x) {
     return count;
 }
 
+// gets the list of all valid secret words
 import { get_secret_words } from './wordle_secret_words.js';
 let secret_words = get_secret_words();
 
+// picks a secret word for a game
 function get_secret_word() {
     let secret_words = get_secret_words();
     let secret_word = secret_words[Math.floor(Math.random() * secret_words.length)].trim();
     return secret_word;
 }
 
+// displays end of game documentation
 function endGame(won) {
     if (!won) {
 
@@ -53,18 +56,18 @@ function get_feedback(secret_word, guess) {
         >>> get_feedback("ARGUE", "MOTTO")
                 "-----" */
 
-    output = ["-", "-", "-", "-", "-"]
+    let output = ["-", "-", "-", "-", "-"]
     guess = guess.toUpperCase()
     secret_word = secret_word.toUpperCase()
 
     // check for yellows and greens
     for (let i = 0; i < 5; i++) {
         if (guess[i] == secret_word[i]) { // green
-            output[i] = guess[i]
+            output[i] = guess[i];
         }
 
         else if (secret_word.includes(guess[i])) {  // yellow 
-            output[i] = guess[i].toLowerCase()
+            output[i] = guess[i].toLowerCase();
         }
     }
     output_upper = output.map(letter => letter.toUpperCase());
@@ -85,11 +88,13 @@ let currentRow = 0;
 const MAX_WORD_LENGTH = 5;
 let secretWord = get_secret_word();
 
+// updates the tile to be the correct letter
 function updateTile(row, column, letter) {
     let tile = document.getElementById(`row-${row}-col-${column}`);
     tile.textContent = letter
 }
 
+// listens for key presses and responds accordingly-- aka the main game function loop
 document.addEventListener('keydown', function (event) {
     let key = event.key;
     if (key === 'Enter' && secret_words.includes(currentGuess)) {
@@ -102,7 +107,7 @@ document.addEventListener('keydown', function (event) {
         }
     }
     else if (key === 'Backspace') {
-        event.preventDefault();
+        event.preventDefault(); // prevents the default action of going to the previous page (?)
 
         updateTile(currentRow, currentGuess.length - 1, '');
         currentGuess = currentGuess.slice(0, -1);
