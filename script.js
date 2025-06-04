@@ -102,6 +102,9 @@ document.addEventListener('keydown', function (event) {
             console.log('Submitting guess:', currentGuess);
             let feedback = get_feedback(secretWord, currentGuess);
             console.log('Feedback:', feedback);
+            if (feedback === feedback.toUpperCase() && feedback.count('-') === 0) {
+                endGame(true);
+            }
             currentRow++;
             currentGuess = "";
         }
@@ -119,5 +122,8 @@ document.addEventListener('keydown', function (event) {
             currentGuess += key.toUpperCase();
             console.log('Added letter:', key.toUpperCase(), 'Current guess:', currentGuess);
         }
+    }
+    if (currentRow === 7) {
+        endGame(false);
     }
 })
