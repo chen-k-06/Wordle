@@ -105,6 +105,21 @@ document.addEventListener('keydown', function (event) {
             if (feedback === feedback.toUpperCase() && count(feedback, '-') === 0) {
                 endGame(true);
             }
+            else {
+                for (let i = 0; i < MAX_WORD_LENGTH; i++) {
+                    let tile = document.getElementById(`row-${currentRow}-col-${i}`);
+                    if (feedback[i] === '-') {
+                        tile.classList.add('notIncluded');
+                    }
+                    else if (feedback[i] === feedback[i].toUpperCase()) {
+                        tile.classList.add('correct');
+                    }
+                    else {
+                        tile.classList.add('included');
+                    }
+                }
+            }
+
             currentRow++;
             currentGuess = "";
         }
