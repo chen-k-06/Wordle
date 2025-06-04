@@ -31,3 +31,18 @@ body {
     justify-content: center;
     color: white;
 }
+
+.correct {
+    background-color: green;
+    color: white;
+}
+
+.included {
+    background-color: gold;
+    color: white;
+}
+
+.notIncluded {
+    background-color: rgb(90, 90, 90);
+    color: white;
+}
