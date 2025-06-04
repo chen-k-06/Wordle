@@ -58,7 +58,7 @@ function get_feedback(secret_word, guess) {
 
     let output = ["-", "-", "-", "-", "-"]
     guess = guess.toUpperCase()
-    let secret_word = secret_word.toUpperCase()
+    secret_word = secret_word.toUpperCase()
 
     // check for yellows and greens
     for (let i = 0; i < 5; i++) {
