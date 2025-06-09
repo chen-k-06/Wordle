@@ -90,13 +90,13 @@ let secretWord = get_secret_word();
 
 // gets the list of all valid guesses (much longer than the list of secret words)
 import { get_valid_guesses } from './valid_wordle_guesses.js';
-let valid_guesses = get_secret_words();
+let valid_guesses = get_valid_guesses();
 
 // updates the tile to be the correct letter
 function updateTile(row, column, letter) {
     let tile = document.getElementById(`row-${row}-col-${column}`);
     tile.textContent = letter
-
+    tile.classList.add('filled');
 }
 
 // listens for key presses and responds accordingly-- aka the main game function loop
@@ -130,7 +130,7 @@ document.addEventListener('keydown', function (event) {
     }
     else if (key === 'Backspace') {
         event.preventDefault(); // prevents the default action of going to the previous page (?)
-
+        tile.classList.remove('filled');
         updateTile(currentRow, currentGuess.length - 1, '');
         currentGuess = currentGuess.slice(0, -1);
         console.log('Deleted. Current guess:', currentGuess);
