@@ -118,12 +118,15 @@ document.addEventListener('keydown', function (event) {
             for (let i = 0; i < MAX_WORD_LENGTH; i++) {
                 let tile = document.getElementById(`row-${currentRow}-col-${i}`);
                 if (feedback[i] === '-') {
+                    tile.classList.remove('filled');
                     tile.classList.add('notIncluded');
                 }
                 else if (feedback[i] === feedback[i].toUpperCase()) {
+                    tile.classList.remove('filled');
                     tile.classList.add('correct');
                 }
                 else {
+                    tile.classList.remove('filled');
                     tile.classList.add('included');
                 }
             }
@@ -137,7 +140,6 @@ document.addEventListener('keydown', function (event) {
     }
     else if (key === 'Backspace') {
         event.preventDefault(); // prevents the default action of going to the previous page (?)
-        tile.classList.remove('filled');
         updateTileBackspace(currentRow, currentGuess.length - 1, '');
         currentGuess = currentGuess.slice(0, -1);
         console.log('Deleted. Current guess:', currentGuess);
