@@ -35,14 +35,21 @@ body {
 .correct {
     background-color: rgba(106, 170, 100, 255);
     color: white;
+    border: 1px solid rgba(106, 170, 100, 255);
 }
 
 .included {
     background-color: rgba(201, 180, 88, 255);
     color: white;
+    border: 1px solid rgba(201, 180, 88, 255);
 }
 
 .notIncluded {
     background-color: rgb(90, 90, 90);
     color: white;
+    border: 1px solid rgb(90, 90, 90);
+}
+
+.filled {
+    border: 1px solid white;
 }
