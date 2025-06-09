@@ -88,17 +88,22 @@ let currentRow = 0;
 const MAX_WORD_LENGTH = 5;
 let secretWord = get_secret_word();
 
+// gets the list of all valid guesses (much longer than the list of secret words)
+import { get_valid_guesses } from './valid_wordle_guesses.js';
+let valid_guesses = get_secret_words();
+
 // updates the tile to be the correct letter
 function updateTile(row, column, letter) {
     let tile = document.getElementById(`row-${row}-col-${column}`);
     tile.textContent = letter
+
 }
 
 // listens for key presses and responds accordingly-- aka the main game function loop
 document.addEventListener('keydown', function (event) {
     let key = event.key;
     if (key === 'Enter') {
-        if (currentGuess != null && currentGuess.length === MAX_WORD_LENGTH && secret_words.includes(currentGuess)) {
+        if (currentGuess != null && currentGuess.length === MAX_WORD_LENGTH && valid_guesses.includes(currentGuess)) {
             console.log('Submitting guess:', currentGuess);
             let feedback = get_feedback(secretWord, currentGuess);
             console.log('Feedback:', feedback);
