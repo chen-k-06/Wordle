@@ -33,12 +33,12 @@ body {
 }
 
 .correct {
-    background-color: green;
+    background-color: rgba(106, 170, 100, 255);
     color: white;
 }
 
 .included {
-    background-color: gold;
+    background-color: rgba(201, 180, 88, 255);
     color: white;
 }
 
