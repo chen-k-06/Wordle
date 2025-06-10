@@ -60,6 +60,7 @@ body {
     top: 0;
     width: 200px;
     height: 100vh;
+    font-size: medium;
 }
 
 .right-bar {
@@ -68,4 +69,26 @@ body {
     top: 0;
     width: 200px;
     height: 100vh;
+    font-size: medium;
+}
+
+@media (max-width: 400px) {
+    .left-bar {
+        position: fixed;
+        left: 20px;
+        top: 0;
+        width: 100px;
+        height: 100vh;
+        font-size: small;
+    }
+
+    .right-bar {
+        position: fixed;
+        right: 20px;
+        top: 0;
+        width: 100px;
+        height: 100vh;
+        font-size: small;
+
+    }
 }
