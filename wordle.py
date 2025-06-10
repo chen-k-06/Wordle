@@ -1,4 +1,5 @@
 import random
+import math
 from colorama import Fore, Back, Style, init
 init(autoreset=True) #Ends color formatting after each print statement
 from wordle_secret_words import get_secret_words
@@ -55,6 +56,22 @@ def get_feedback(guess: str, secret_word: str) -> str:
 
     return(output)
 
+def uniform_entropy(outcomes):
+    N = len(outcomes)
+    if N == 0:
+        return 0
+    return math.log2(N)
+
+def rank_guesses(possible_guesses, possible_answers):
+    possible_answers_copy = [i for i in possible_answers]
+    for answer in possible_answers:
+        feedbacks = []
+        for guess in possible_guesses:
+            #For each possible answer in your current list, compute the feedback pattern you would get if you guessed this word.
+            feedbacks.append(get_feedback(guess, answer))
+
+
+
 def get_AI_guess(guesses: list[str], feedback: list[str], secret_words: set[str], valid_guesses: set[str], guess_number: int) -> str:
     '''Analyzes feedback from previous guesses/feedback (if any) to make a new guess
         
@@ -76,12 +93,14 @@ def get_AI_guess(guesses: list[str], feedback: list[str], secret_words: set[str]
     last_guess = guesses[guess_number - 1]
     
     #checks which words share the same feedback result as the guess
-    for word in secret_words_copy:
-        if feedback != get_feedback(last_guess, word):
-            secret_words.remove(word)
-
-    #picks next choice at random
-    next_guess = random.choice(list(secret_words))
+    secret_words_copy = [
+        word for word in secret_words_copy
+        if get_feedback(last_guess, word) == feedback
+    ]
+    
+    bits_remaining = uniform_entropy(secret_words_copy)
+    print("potential words left: ", len(secret_words_copy))
+    print("bits left: ", bits_remaining)
 
     while next_guess in guesses: 
         next_guess = random.choice(list(secret_words))
