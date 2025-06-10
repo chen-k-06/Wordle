@@ -22,10 +22,10 @@ function get_secret_word() {
 // displays end of game documentation
 function endGame(won) {
     if (!won) {
-
+        console.log("Game over. The correct answer was ", secretWord);
     }
     else {
-
+        console.log("You won!");
     }
 }
 
@@ -131,7 +131,7 @@ document.addEventListener('keydown', function (event) {
                 }
             }
             if (feedback === feedback.toUpperCase() && count(feedback, '-') === 0) {
-                endGame(true);
+                endGame(true, secretWord);
             }
 
             currentRow++;
@@ -152,6 +152,6 @@ document.addEventListener('keydown', function (event) {
         }
     }
     if (currentRow === 7) {
-        endGame(false);
+        endGame(false, secretWord);
     }
 })
