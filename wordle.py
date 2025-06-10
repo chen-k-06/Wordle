@@ -1,5 +1,5 @@
-import random
-import math
+import random, math, json
+from collections import Counter
 from colorama import Fore, Back, Style, init
 init(autoreset=True) #Ends color formatting after each print statement
 from wordle_secret_words import get_secret_words
@@ -37,22 +37,18 @@ def get_feedback(guess: str, secret_word: str) -> str:
     output = ["-", "-", "-", "-", "-"]
     guess = guess.upper()
     secret_word = secret_word.upper()
+    secret_counter = Counter(secret_word)
 
-    #check for yellows and greens
+    #check for greens
     for i in range(5):
         if guess[i] == secret_word[i]: #green
             output[i] = guess[i]
+            secret_counter[guess[i]] -= 1
 
-        elif guess[i] in secret_word: #yellow
+    for i in range(5): # yellow
+        if output[i] == '-' and guess[i] in secret_counter and secret_counter[guess[i]] > 0:
             output[i] = guess[i].lower()
-    
-    #check for case where the guess contains more of a specific letter than the secret word
-    for i in range(4, -1, -1): 
-        letter = output[i].upper()
-        output_upper = [letter.upper() for letter in output]
-
-        if letter != "-" and output_upper.count(letter) > secret_word.count(letter) and output[i] != output[i].upper(): 
-            output[i] = "-"
+            secret_counter[guess[i]] -= 1
 
     return(''.join(output))
 
@@ -72,21 +68,16 @@ def get_entropy(probabilities):
         if (probability > 0):
             entropy += -1*probability*math.log2(probability)
     return entropy
-    
 
 def rank_guesses(possible_guesses, possible_answers):
+    feedback_cache = create_feedback_cache(possible_guesses, possible_answers)
     entropies = {}
-    feedback_cache = {}
-
-    for guess in possible_guesses:
-        for answer in possible_answers:
-                feedback_cache[(guess, answer)] = get_feedback(guess, answer)
 
     for guess in possible_guesses:
         feedback_counts = {}            
         for answer in possible_answers:
             #For each possible answer in your current list, compute the feedback pattern you would get if you guessed this word.
-            feedback = feedback_cache[(guess, answer)]
+            feedback = feedback_cache[guess][answer]
             feedback_counts[feedback] = feedback_counts.get(feedback, 0) + 1
         
         probabilities = [count / len(possible_answers) for count in feedback_counts.values()]
@@ -94,7 +85,7 @@ def rank_guesses(possible_guesses, possible_answers):
         entropies[guess] = entropy
 
     sorted_entropies = {key: value for key, value in sorted(entropies.items(), key=lambda item: item[1], reverse=True)}    
-    print(sorted_entropies)
+    # print(sorted_entropies)
     return sorted_entropies
 
 
@@ -111,29 +102,31 @@ def get_AI_guess(guesses: list[str], feedback: list[str], secret_words: set[str]
         Returns:
          str: a valid guess that is exactly 5 uppercase letters
     '''
-    #first guess should always be slate, mathmatically proven best starting word
-    if (guesses[0] == ""): 
-        return (13.66,"SLATE")
-    
     valid_guesses_copy = []
     
     # checks which words share the same feedback result as the guess
-    # end game code 
-    for guess in valid_guesses: 
-        flag = False
-        for i in range(len(feedback)): 
-            item = feedback[i]
-            last_guess = guesses[i]
-            if get_feedback(last_guess, guess) != item:
-                flag = True
-                break
-        if flag == False: 
-            valid_guesses_copy.append(guess)
+    if (guesses[0] != ""):
+        for guess in valid_guesses: 
+            flag = False
+            for i in range(len(feedback)): 
+                item = feedback[i]
+                last_guess = guesses[i]
+                if get_feedback(last_guess, guess) != item:
+                    flag = True
+                    break
+            if flag == False: 
+                valid_guesses_copy.append(guess)
     
     bits_remaining = get_uniform_entropy(valid_guesses_copy)
     print("potential words left: ", len(valid_guesses_copy))
     print("bits left: ", bits_remaining)
 
+    #first guess is TARES
+    if (guesses[0] == ""): 
+        valid_guesses_copy = [i for i in valid_guesses]
+        # guesses = rank_guesses(valid_guesses, valid_guesses_copy)
+        return (13.66,"TARES")
+    
     # valid_guesses = valid_guesses.remove(next_guess)
     if (bits_remaining == 0) :
         return (0, valid_guesses_copy[0])
