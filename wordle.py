@@ -1,4 +1,4 @@
-import random, math, json
+import random, math, json, os
 from collections import Counter
 from colorama import Fore, Back, Style, init
 init(autoreset=True) #Ends color formatting after each print statement
@@ -69,8 +69,16 @@ def get_entropy(probabilities):
             entropy += -1*probability*math.log2(probability)
     return entropy
 
+# load in feedback cache from the json file once, globally
+feedback_cache = {}
+
+for filename in os.listdir("feedback_caches"):
+    if filename.endswith(".json"):
+        with open(f"feedback_caches/{filename}", "r", encoding="utf-8") as f:
+            chunk = json.load(f)
+            feedback_cache.update(chunk)
+
 def rank_guesses(possible_guesses, possible_answers):
-    feedback_cache = create_feedback_cache(possible_guesses, possible_answers)
     entropies = {}
 
     for guess in possible_guesses:
