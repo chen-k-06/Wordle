@@ -13,9 +13,9 @@ def create_feedback_chunks(possible_guesses, possible_answers):
             chunks[guess[0]][guess] = chunks[guess[0]].get(guess, {})
             chunks[guess[0]][guess][answer] = feedback
 
-    os.makedirs("feedback_chunks", exist_ok=True)
+    os.makedirs("feedback_caches", exist_ok=True)
     for letter, chunk in chunks.items():
-        with open(f"feedback_chunks/feedback_{letter}.json", "w", encoding="utf-8") as f:
+        with open(f"feedback_caches/feedback_{letter}.json", "w", encoding="utf-8") as f:
             json.dump(chunk, f, indent=2)
 
 create_feedback_chunks(get_valid_wordle_guesses(), get_secret_words())
