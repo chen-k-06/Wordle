@@ -16,6 +16,7 @@ if __name__ == "__main__":
         if result != -1: 
             successful_games += 1
             guesses_needed.append(result)
+        print(successful_games)
     
     accuracy = (successful_games/num_of_words) * 100
     for num in guesses_needed: 
