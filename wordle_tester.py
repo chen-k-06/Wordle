@@ -1,4 +1,4 @@
-from wordle import wordle_game, get_AI_guess
+from wordle import wordle_game
 from wordle_secret_words import get_secret_words
 
 #in order to use this code, wordle_game must be modified so that guesses are not taken from user input but are automatically set to hints

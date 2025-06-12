@@ -1,193 +1,62 @@
-import random, math, json, os
-from collections import Counter
 from colorama import Fore, Back, Style, init
 init(autoreset=True) #Ends color formatting after each print statement
 from wordle_secret_words import get_secret_words
 from valid_wordle_guesses import get_valid_wordle_guesses
-
-def get_feedback(guess: str, secret_word: str) -> str:
-    '''Generates a feedback string based on comparing a 5-letter guess with the secret word. 
-       The feedback string uses the following schema: 
-        - Correct letter, correct spot: uppercase letter ('A'-'Z')
-        - Correct letter, wrong spot: lowercase letter ('a'-'z')
-        - Letter not in the word: '-'
-
-        Args:
-            guess (str): The guessed word
-            secret_word (str): The secret word
-
-        Returns:
-            str: Feedback string, based on comparing guess with the secret word
-    
-        Examples
-        >>> get_feedback("lever", "EATEN")
-        "-e-E-"
-            
-        >>> get_feedback("LEVER", "LOWER")
-                "L--ER"
-            
-        >>> get_feedback("MOMMY", "MADAM")
-                "M-m--"
-            
-        >>> get_feedback("ARGUE", "MOTTO")
-                "-----"
-
-    
-    '''
-    output = ["-", "-", "-", "-", "-"]
-    guess = guess.upper()
-    secret_word = secret_word.upper()
-    secret_counter = Counter(secret_word)
-
-    #check for greens
-    for i in range(5):
-        if guess[i] == secret_word[i]: #green
-            output[i] = guess[i]
-            secret_counter[guess[i]] -= 1
-
-    for i in range(5): # yellow
-        if output[i] == '-' and guess[i] in secret_counter and secret_counter[guess[i]] > 0:
-            output[i] = guess[i].lower()
-            secret_counter[guess[i]] -= 1
-
-    return(''.join(output))
-
-def get_uniform_entropy(outcomes):
-    N = len(outcomes)
-    if N == 0:
-        return 0
-    return math.log2(N)
-
-# returns an integer, the entropy of that event given a list of outcomes & probabilities
-def get_entropy(probabilities):
-    entropy = 0.0
-    if not probabilities: 
-        return 0
-    
-    for probability in probabilities:
-        if (probability > 0):
-            entropy += -1*probability*math.log2(probability)
-    return entropy
-
-# load in feedback cache from the json file once, globally
-feedback_cache = {}
-
-for filename in os.listdir("feedback_caches"):
-    if filename.endswith(".json"):
-        with open(f"feedback_caches/{filename}", "r", encoding="utf-8") as f:
-            chunk = json.load(f)
-            feedback_cache.update(chunk)
-
-def rank_guesses(possible_guesses, possible_answers):
-    entropies = {}
-
-    for guess in possible_guesses:
-        feedback_counts = {}            
-        for answer in possible_answers:
-            #For each possible answer in your current list, compute the feedback pattern you would get if you guessed this word.
-            feedback = feedback_cache[guess][answer]
-            feedback_counts[feedback] = feedback_counts.get(feedback, 0) + 1
-        
-        probabilities = [count / len(possible_answers) for count in feedback_counts.values()]
-        entropy = get_entropy(probabilities)
-        entropies[guess] = entropy
-
-    sorted_entropies = {key: value for key, value in sorted(entropies.items(), key=lambda item: item[1], reverse=True)}    
-    # print(sorted_entropies)
-    return sorted_entropies
-
-
-def get_AI_guess(guesses: list[str], feedback: list[str], secret_words: set[str], valid_guesses: set[str], guess_number: int) -> tuple[float, str]:
-    '''Analyzes feedback from previous guesses/feedback (if any) to make a new guess
-        
-        Args:
-         guesses (list): A list of string guesses, which could be empty
-         feedback (list): A list of feedback strings, which could be empty
-         secret_words (set): A set of potential secret words
-         valid_guesses (set): A set of valid AI guesses
-         guess_number (int): the number of guesses made
-        
-        Returns:
-         str: a valid guess that is exactly 5 uppercase letters
-    '''
-    valid_guesses_copy = []
-    
-    # checks which words share the same feedback result as the guess
-    if (guesses[0] != ""):
-        for guess in valid_guesses: 
-            flag = False
-            for i in range(len(feedback)): 
-                item = feedback[i]
-                last_guess = guesses[i]
-                if get_feedback(last_guess, guess) != item:
-                    flag = True
-                    break
-            if flag == False: 
-                valid_guesses_copy.append(guess)
-    
-    bits_remaining = get_uniform_entropy(valid_guesses_copy)
-    print("potential words left: ", len(valid_guesses_copy))
-    print("bits left: ", bits_remaining)
-
-    #first guess is TARES
-    if (guesses[0] == ""): 
-        valid_guesses_copy = [i for i in valid_guesses]
-        # guesses = rank_guesses(valid_guesses, valid_guesses_copy)
-        return (13.66,"TARES")
-    
-    # valid_guesses = valid_guesses.remove(next_guess)
-    if (bits_remaining == 0) :
-        return (0, valid_guesses_copy[0])
-
-    guesses = rank_guesses(valid_guesses, valid_guesses_copy)
-    return (bits_remaining, list(guesses)[0])
-
-
-#selects a secret word at random from the official Wordle list
-def get_secret_word():
-    secret_words = list(get_secret_words())
-    secret_word = random.choice(secret_words).strip()
-    return secret_word
+from wordlev2 import calculate_entropies, get_pattern, get_secret_word, get_all_patterns, generate_feedback_dict, get_remaining_guesses
+import pickle, os
 
 #plays the Wordle game
 # will need to be rewritten in JS
 def wordle_game(secret_word: str):
-    secret_words = list(get_secret_words())
     valid_guesses = list(get_valid_wordle_guesses())
+    secret_words = list(get_secret_words())
     guesses = ["", "", "", "", "", ""]
     feedbacks = []
-    bits = [] # uncertainty left in the answer space. should be strictly decreasing
+    all_patterns = get_all_patterns()
+
+    if os.path.exists("pattern_cache.pkl"):
+        with open("pattern_cache.pkl", "rb") as file:
+            feedback_dict = pickle.load(file)
+
+    else: 
+        feedback_dict = generate_feedback_dict(secret_words)
+        with open("pattern_cache.pkl", "wb") as file:
+            pickle.dump(feedback_dict, file)
+        print("Generated and cached pattern dictionary.")
+
     #user input guesses
     for i in range(6):
-        guess = "HINT"
+        guess = "hint"
 
         while (guess.upper() not in valid_guesses): 
             # guess = input("Enter guess, or 'hint' for a hint: ")
 
             #AI guess input
             if (guess.upper() == "HINT"):
-                    bits_remaining, guess = get_AI_guess(guesses, feedbacks, secret_words, valid_guesses, i)
-                    bits.append(bits_remaining)
+                    guess = calculate_entropies(secret_words, secret_words, feedback_dict, all_patterns)
+                    sorted_items = sorted(guess.items(), key=lambda item: item[1], reverse=True)
+                    guess = sorted_items[0]
+                    guess = guess[0]
                     break
 
             elif (guess.upper() not in valid_guesses): 
                 print("Not a valid guess. Please try again.")
              
         guesses[i] = guess
-        feedbacks.append(get_feedback(guess, secret_word))
+        feedbacks.append(get_pattern(guess, secret_word))
 
         #output formatting
         print(Back.LIGHTBLACK_EX + '       ') 
 
         for guess in guesses: 
             if (guess != ""):
-                feedback = get_feedback(guess, secret_word)
+                feedback = get_pattern(guess, secret_word)
                 print(Back.LIGHTBLACK_EX + ' ', end = '')
                 for i in range(len(feedback)):
-                    if feedback[i] == "-":
+                    if feedback[i] == '0':
                         print(Back.LIGHTBLACK_EX + guess[i].upper(), end='')
                     
-                    elif feedback[i] == feedback[i].lower():
+                    elif feedback[i] == '1':
                         print(Back.YELLOW + guess[i].upper() , end='')
 
                     else:
@@ -199,6 +68,8 @@ def wordle_game(secret_word: str):
                 print("You've guess the word! It was", secret_word, end = "")
                 print(".")
                 return (i+1) #success
+            
+        secret_words = get_remaining_guesses(guesses, feedbacks, secret_words)    
         print(Back.LIGHTBLACK_EX + '       ') 
 
     print("No more guesses left. The word was" , secret_word, end = "")
