@@ -30,7 +30,7 @@ function endGame(won) {
 }
 
 function get_feedback(secret_word, guess) {
-    /* Generates a feedback string based on comparing a 5-letter guess with the secret word. 
+    /*Generates a feedback string based on comparing a 5-letter guess with the secret word. 
        The feedback string uses the following schema: 
         - Correct letter, correct spot: uppercase letter ('A'-'Z')
         - Correct letter, wrong spot: lowercase letter ('a'-'z')
@@ -44,40 +44,44 @@ function get_feedback(secret_word, guess) {
             str: Feedback string, based on comparing guess with the secret word
     
         Examples
-        >>> get_feedback("lever", "EATEN")
-        "-e-E-"
+        >>> get_pattern("lever", "EATEN")
+                "01020"
             
-        >>> get_feedback("LEVER", "LOWER")
-                "L--ER"
+        >>> get_pattern("LEVER", "LOWER")
+                "20022"
             
-        >>> get_feedback("MOMMY", "MADAM")
-                "M-m--"
+        >>> get_pattern("MOMMY", "MADAM")
+                "20100"
             
-        >>> get_feedback("ARGUE", "MOTTO")
-                "-----" */
+        >>> get_pattern("ARGUE", "MOTTO")
+                "00000"
+    */
+    guess = guess.toUpperCase();
+    secret_word = secret_word.toUpperCase();
 
-    let output = ["-", "-", "-", "-", "-"]
-    guess = guess.toUpperCase()
-    secret_word = secret_word.toUpperCase()
+    let output = ["0", "0", "0", "0", "0"];
+    let secret_letters = secret_word.split('');
+    let guess_letters = guess.split('');
+    let letter_count = {};
 
-    // check for yellows and greens
+    // Count occurrences in the secret word
+    for (let letter of secret_letters) {
+        letter_count[letter] = (letter_count[letter] || 0) + 1;
+    }
+
+    // First pass: mark greens
     for (let i = 0; i < 5; i++) {
-        if (guess[i] == secret_word[i]) { // green
-            output[i] = guess[i];
-        }
-
-        else if (secret_word.includes(guess[i])) {  // yellow 
-            output[i] = guess[i].toLowerCase();
+        if (guess_letters[i] === secret_letters[i]) {
+            output[i] = "2"; // green
+            letter_count[guess_letters[i]] -= 1;
         }
     }
-    let output_upper = output.map(letter => letter.toUpperCase());
 
-    //check for case where the guess contains more of a specific letter than the secret word
-    for (let i = 4; i >= 0; i--) {
-        let letter = output[i].toUpperCase();
-
-        if ((letter != "-") && (count(output_upper, letter) > count(secret_word, letter)) && (output[i] != output[i].toUpperCase())) {
-            output[i] = "-";
+    // Second pass: mark yellows
+    for (let i = 0; i < 5; i++) {
+        if (output[i] === "0" && letter_count[guess_letters[i]] > 0) {
+            output[i] = "1"; // yellow
+            letter_count[guess_letters[i]] -= 1;
         }
     }
     return output.join('');
@@ -117,11 +121,11 @@ document.addEventListener('keydown', function (event) {
 
             for (let i = 0; i < MAX_WORD_LENGTH; i++) {
                 let tile = document.getElementById(`row-${currentRow}-col-${i}`);
-                if (feedback[i] === '-') {
+                if (feedback[i] === '0') {
                     tile.classList.remove('filled');
                     tile.classList.add('notIncluded');
                 }
-                else if (feedback[i] === feedback[i].toUpperCase()) {
+                else if (feedback[i] === '1') {
                     tile.classList.remove('filled');
                     tile.classList.add('correct');
                 }
@@ -130,7 +134,7 @@ document.addEventListener('keydown', function (event) {
                     tile.classList.add('included');
                 }
             }
-            if (feedback === feedback.toUpperCase() && count(feedback, '-') === 0) {
+            if (feedback === "22222") {
                 endGame(true, secretWord);
             }
 
