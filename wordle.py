@@ -10,6 +10,7 @@ import pickle, os
 def wordle_game(secret_word: str):
     valid_guesses = list(get_valid_wordle_guesses())
     secret_words = list(get_secret_words())
+    possible_secret_words = list(get_secret_words())
     guesses = ["", "", "", "", "", ""]
     feedbacks = []
     all_patterns = get_all_patterns()
@@ -19,7 +20,7 @@ def wordle_game(secret_word: str):
             feedback_dict = pickle.load(file)
 
     else: 
-        feedback_dict = generate_feedback_dict(secret_words)
+        feedback_dict = generate_feedback_dict(valid_guesses)
         with open("pattern_cache.pkl", "wb") as file:
             pickle.dump(feedback_dict, file)
         print("Generated and cached pattern dictionary.")
@@ -33,7 +34,10 @@ def wordle_game(secret_word: str):
 
             #AI guess input
             if (guess.upper() == "HINT"):
-                    guess = calculate_entropies(secret_words, secret_words, feedback_dict, all_patterns)
+                    if i == 0:
+                        guess = "CRANE"
+                        break
+                    guess = calculate_entropies(secret_words, possible_secret_words, feedback_dict, all_patterns)
                     sorted_items = sorted(guess.items(), key=lambda item: item[1], reverse=True)
                     guess = sorted_items[0]
                     guess = guess[0]
@@ -43,34 +47,37 @@ def wordle_game(secret_word: str):
                 print("Not a valid guess. Please try again.")
              
         guesses[i] = guess
-        feedbacks.append(get_pattern(guess, secret_word))
+        feedback = get_pattern(guess, secret_word)
+        feedbacks.append(feedback)
+        possible_secret_words = get_remaining_guesses(guesses, feedbacks, possible_secret_words, feedback_dict)    
+
 
         #output formatting
-        print(Back.LIGHTBLACK_EX + '       ') 
+        # print(Back.LIGHTBLACK_EX + '       ') 
 
-        for guess in guesses: 
-            if (guess != ""):
-                feedback = get_pattern(guess, secret_word)
-                print(Back.LIGHTBLACK_EX + ' ', end = '')
-                for i in range(len(feedback)):
-                    if feedback[i] == '0':
-                        print(Back.LIGHTBLACK_EX + guess[i].upper(), end='')
+        for j in range(i + 1): 
+            guess = guesses[j]
+            feedback = feedbacks[j]
+            # if (guess != ""):
+            #     print(Back.LIGHTBLACK_EX + ' ', end = '')
+            #     for k in range(len(feedback)):
+            #         if feedback[k] == '0':
+            #             print(Back.LIGHTBLACK_EX + guess[i].upper(), end='')
                     
-                    elif feedback[i] == '1':
-                        print(Back.YELLOW + guess[i].upper() , end='')
+            #         elif feedback[k] == '1':
+            #             print(Back.YELLOW + guess[i].upper() , end='')
 
-                    else:
-                        print(Back.GREEN + guess[i].upper() , end='')
+            #         else:
+            #             print(Back.GREEN + guess[i].upper() , end='')
 
-                print(Back.LIGHTBLACK_EX + ' ')
+            #     print(Back.LIGHTBLACK_EX + ' ')
             if (guess.upper() == secret_word.upper()): 
-                print(Back.LIGHTBLACK_EX + '       ') 
-                print("You've guess the word! It was", secret_word, end = "")
-                print(".")
+                # print(Back.LIGHTBLACK_EX + '       ') 
+                # print("You've guess the word! It was", secret_word, end = "")
+                # print(".")
                 return (i+1) #success
             
-        secret_words = get_remaining_guesses(guesses, feedbacks, secret_words)    
-        print(Back.LIGHTBLACK_EX + '       ') 
+        # print(Back.LIGHTBLACK_EX + '       ') 
 
     print("No more guesses left. The word was" , secret_word, end = "")
     print(".")
