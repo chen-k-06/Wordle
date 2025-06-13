@@ -2,7 +2,7 @@ from colorama import Fore, Back, Style, init
 init(autoreset=True) #Ends color formatting after each print statement
 from wordle_secret_words import get_secret_words
 from valid_wordle_guesses import get_valid_wordle_guesses
-from wordlev2 import calculate_entropies, get_pattern, get_secret_word, get_all_patterns, generate_feedback_dict, get_remaining_guesses
+from wordle_helper_functions import calculate_entropies, get_pattern, get_secret_word, get_all_patterns, generate_feedback_dict, get_remaining_guesses
 import pickle, os
 
 #plays the Wordle game

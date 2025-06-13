@@ -4,10 +4,8 @@ from collections import Counter
 from colorama import Fore, Back, Style, init
 init(autoreset=True) #Ends color formatting after each print statement
 from wordle_secret_words import get_secret_words
-from valid_wordle_guesses import get_valid_wordle_guesses
 from scipy.stats import entropy
 import itertools
-import pickle, os
 
 #selects a secret word at random from the official Wordle list
 def get_secret_word():
