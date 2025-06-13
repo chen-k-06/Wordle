@@ -1,13 +1,9 @@
 # api code 
-from typing import Union
 from fastapi import FastAPI
 from pydantic import BaseModel
-import random, math
+import math
 from collections import Counter
-from colorama import Fore, Back, Style, init
-from wordle_secret_words import get_secret_words
 from scipy.stats import entropy
-import itertools
 from typing import Dict, List
 
 app = FastAPI()
