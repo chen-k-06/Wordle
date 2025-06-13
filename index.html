@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wordle</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
 
 <body>
@@ -14,13 +15,22 @@
     <!-- <h1>Wordle</h1> -->
     <div id="board">
         <!-- Top bar -->
-        <!-- <div class="row" id="top-row">
-            <h1># possibilities / uncertainty</h1>
+        <div class="row" id="top-row">
+            <div class="text-box">
+                <h1># possibilities / uncertainty</h1>
+            </div>
 
-            <h1>Top picks</h1>
-            <h1>E[Info]</h1>
-            <h1>p(word)</h1>
-        </div> -->
+            <div class="empty-box"></div>
+            <div class="empty-box"></div>
+            <div class="empty-box"></div>
+            <div class="empty-box"></div>
+            <div class="empty-box"></div>
+
+            <div class="text-box">
+                <h1>Top picks --- E[Info]</h1>
+            </div>
+        </div>
+
         <!-- row 1 -->
         <div class="row" id="row-0">
             <div class="text-box" id="row-0-pos-bits">12,972 pos, 13.66 bits</div>
