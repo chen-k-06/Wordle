@@ -18,6 +18,8 @@ if __name__ == "__main__":
             guesses_needed.append(result)
         print("num guesses needed: ", result)
         print("games played: ", successful_games)
+        if successful_games == 300:
+            break
     
     accuracy = (successful_games/num_of_words) * 100
 
@@ -29,7 +31,6 @@ if __name__ == "__main__":
 
     import matplotlib.pyplot as plt
 
-    # Simple line plot of guesses per game
     plt.figure(figsize=(12, 6))
     plt.plot(guesses_needed, label='Guesses Needed per Game', color='blue', alpha=0.7)
     plt.axhline(y=average_guesses_needed, color='red', linestyle='--', label=f'Average = {average_guesses_needed:.2f}')
