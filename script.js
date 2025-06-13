@@ -121,20 +121,19 @@ document.addEventListener('keydown', function (event) {
 
             for (let i = 0; i < MAX_WORD_LENGTH; i++) {
                 let tile = document.getElementById(`row-${currentRow}-col-${i}`);
+                tile.classList.remove('filled');
+
                 if (feedback[i] === '0') {
-                    tile.classList.remove('filled');
                     tile.classList.add('notIncluded');
                 }
                 else if (feedback[i] === '1') {
-                    tile.classList.remove('filled');
                     tile.classList.add('correct');
                 }
                 else {
-                    tile.classList.remove('filled');
                     tile.classList.add('included');
                 }
             }
-            if (feedback === "22222") {
+            if (feedback === "22222") { // checks for win
                 endGame(true, secretWord);
             }
 
