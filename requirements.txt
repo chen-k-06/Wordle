@@ -4,7 +4,6 @@ scipy
 pydantic
 colorama
 pickle
-os
 random
 math
 collections
