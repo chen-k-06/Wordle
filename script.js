@@ -126,7 +126,7 @@ document.addEventListener('keydown', function (event) {
                 if (feedback[i] === '0') {
                     tile.classList.add('notIncluded');
                 }
-                else if (feedback[i] === '1') {
+                else if (feedback[i] === '2') {
                     tile.classList.add('correct');
                 }
                 else {
