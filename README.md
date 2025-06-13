@@ -1,5 +1,8 @@
 # Wordle
 Wordle is a web-based word game developed by Josh Wardle. Players have six attempts to guess a five-letter word, with feedback given for each guess in the form of colored tiles indicating when letters match or occupy the correct position. (Wikipedia)
-+ AI-powered bot with a 100% win rate
+Plus an AI-powered bot with a 100% win rate
 
-+ https://replit.com/@KaitlynChen/wordle-Fast-API#main.py
+The web-based version of this game is hosted at https://chen-k-06.github.io/Wordle/. The game is also playable in the terminal using Wordle.py-- this is why there are duplicates of a lot of code in JS/Python or even in the API. 
+Code to test the hot's accuracy can be found in wordle_tester.py. wordle_bot_results contains a graph of the distribution of number of guesses required for every possible goal word in Wordle. 
+
+API is hosted at https://replit.com/@KaitlynChen/wordle-Fast-API#main.py.
