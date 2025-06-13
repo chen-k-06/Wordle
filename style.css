@@ -15,9 +15,8 @@ body {
 }
 
 .row {
-    /* border: 1px solid gray;  */
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 2fr
 }
 
 .box {
