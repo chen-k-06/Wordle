@@ -1,5 +1,5 @@
 body {
-    font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Clear Sans', 'Helvetica Neue', sans-serif;
     background-color: rgb(29, 29, 27);
     text-align: center;
     color: white;
@@ -20,6 +20,11 @@ button {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
 #board {
     display: grid;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -34,7 +39,7 @@ button {
 }
 
 .row .text-box h1 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     color: lightskyblue;
     align-items: center;
     margin: 5px;
