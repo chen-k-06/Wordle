@@ -3,11 +3,6 @@ uvicorn
 scipy
 pydantic
 colorama
-pickle
-os
-random
-math
-collections
 scipy
 itertools
 typing
