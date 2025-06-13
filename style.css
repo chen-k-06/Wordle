@@ -11,7 +11,7 @@ body {
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
     gap: 10px;
     margin: 20px auto;
-    width: 420px;
+    width: 630px;
 }
 
 .row {
