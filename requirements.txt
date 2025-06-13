@@ -4,5 +4,4 @@ scipy
 pydantic
 colorama
 scipy
-itertools
 typing
