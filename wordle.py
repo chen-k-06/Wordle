@@ -6,7 +6,6 @@ from wordle_helper_functions import calculate_entropies, get_pattern, get_secret
 import pickle, os
 
 #plays the Wordle game
-# will need to be rewritten in JS
 def wordle_game(secret_word: str):
     valid_guesses = list(get_valid_wordle_guesses())
     secret_words = list(get_secret_words())
@@ -27,10 +26,10 @@ def wordle_game(secret_word: str):
 
     #user input guesses
     for i in range(6):
-        guess = "hint"
+        guess = ""
 
         while (guess.upper() not in valid_guesses): 
-            # guess = input("Enter guess, or 'hint' for a hint: ")
+            guess = input("Enter guess, or 'hint' for a hint: ")
 
             #AI guess input
             if (guess.upper() == "HINT"):

@@ -12,6 +12,7 @@ if __name__ == "__main__":
     print(num_of_words)
 
     for secret_word in secret_words: 
+        print(secret_word)
         result = wordle_game(secret_word)
         if result != -1: 
             successful_games += 1
