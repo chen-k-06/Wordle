@@ -11,7 +11,9 @@ import itertools
 
 app = FastAPI()
 
-# calculate bits remaining 
+# ---------------------------
+# Calculate bits remaining
+# ---------------------------
 class WordListRequest(BaseModel):
     word_list: list[str]
 
@@ -29,12 +31,14 @@ def calculate_bits_remaining(word_list: list[str]) -> float:
         return 0
     return math.log2(N)
 
-@app.get("/bits_remaining")
-def get_bits_remaining(word_list): # API route handler 
-    result = calculate_bits_remaining(word_list)
+@app.post("/bits_remaining")
+def get_bits_remaining(request: WordListRequest): # API route handler 
+    result = calculate_bits_remaining(request.word_list)
     return {"bits_remaining": result}
 
-# get feedback dictionary 
+# ---------------------------
+# Feedback Pattern Functions
+# ---------------------------
 def get_pattern(guess: str, answer: str) -> str:
     '''Generates a feedback string based on comparing a 5-letter guess with the secret word. 
        The feedback string uses the following schema: 
@@ -100,3 +104,12 @@ def generate_feedback_dict(guesses: list[str]) -> dict:
             feedback_dict[guess][pattern].add(answer)
     return feedback_dict
 
+class GuessListRequest(BaseModel):
+    guesses: list[str]
+
+@app.post("/feedback_dict")
+def get_feedback_dict(request: GuessListRequest):
+    result = generate_feedback_dict(request.guesses)
+    #convert all sets to lists
+    serializable_result = {key: {pair_key: list(value) for pair_key, value in pair_value.items()} for key, pair_value in result.items()}
+    return serializable_result
