@@ -32,6 +32,18 @@ body {
     color: white;
 }
 
+.text-box {
+    width: 120px;
+    height: 70px;
+    font-size: 2rem;
+    display: flex;
+    text-transform: uppercase;
+    align-items: center;
+    justify-content: left;
+    color: white;
+    font-size: small;
+}
+
 .correct {
     background-color: rgba(106, 170, 100, 255);
     color: white;
