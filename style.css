@@ -17,7 +17,7 @@ body {
 .row {
     /* border: 1px solid gray;  */
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(7, 1fr);
 }
 
 .box {
