@@ -5,6 +5,7 @@ import math
 from collections import Counter
 from scipy.stats import entropy
 from typing import Dict, List
+import pickle
 
 app = FastAPI()
 
@@ -106,10 +107,16 @@ def generate_feedback_dict(guesses: list[str]) -> dict:
                 feedback_dict[guess][pattern].append(answer)
     return feedback_dict
 
+@app.get("/get_feedback_dict")
+def get_feedback_dict():
+    with open("pattern_cache.pkl", "rb") as f:
+        data = pickle.load(f)
+    return data  
+
 class GuessListRequest(BaseModel):
     guesses: list[str]
 
-@app.post("/feedback_dict")
+@app.post("/generate_feedback_dict")
 def get_feedback_dict(request: GuessListRequest) -> dict:
     result = generate_feedback_dict(request.guesses)
     return result
