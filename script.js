@@ -104,12 +104,13 @@ function updateTileBackspace(row, column, letter) {
     tile.classList.remove('filled');
 }
 
+// API functions 
 async function getFeedbackDict() {
     let fetchError = null;
     let result = null;
 
     try {
-        const response = await fetch('https://wordle-5rl4.onrender.com');
+        const response = await fetch('https://wordle-5rl4.onrender.com/get_feedback_dict');
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -123,22 +124,18 @@ async function getFeedbackDict() {
 
 }
 
-
-async function getFeedbackDict() {
+async function get_bits_remaining(guess_list) {
     let fetchError = null;
     let result = null;
 
     try {
-        const response = await fetch('https://wordle-5rl4.onrender.com', {
+        const response = await fetch('https://wordle-5rl4.onrender.com/bits_remaining', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                possible_guesses: ['crane', 'slate'],
-                possible_answers: ['crane'],
-                feedback_dict: { crane: { '22222': ['crane'] } },
-                all_patterns: ['22222']
+                word_list: guess_list
             })
         });
 
@@ -148,7 +145,7 @@ async function getFeedbackDict() {
         fetchError = error;
         console.error('Fetch error:', fetchError);
     }
-
+    return result
 }
 
 window.onload = function () {
