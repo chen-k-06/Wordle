@@ -104,7 +104,7 @@ function updateTileBackspace(row, column, letter) {
 }
 
 // API functions 
-import { decode } from "@msgpack/msgpack";
+import { decode } from "https://cdn.jsdelivr.net/npm/@msgpack/msgpack@2.7.1/dist.es2019/esm/index.min.js";
 async function loadFeedbackDict() {
     const response = await fetch('https://raw.githubusercontent.com/chen-k-06/Wordle/main/pattern_cache.msgpack');
     const arrayBuffer = await response.arrayBuffer();
