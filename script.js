@@ -4,9 +4,7 @@ API server
 
 // gets the list of all valid secret words
 import { get_secret_words } from './wordle_secret_words.js';
-import { get_feedback_dict } from './get_feedback_dict.js';
 let secret_words = get_secret_words();
-let feedback_dict = get_feedback_dict();
 
 // picks a secret word for a game
 function get_secret_word() {
