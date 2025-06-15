@@ -170,12 +170,13 @@ async function get_valid_remaining_guesses(previous_guesses, feedback_list, poss
     return result
 }
 
+let feedback_dict = null
 window.onload = async function () {
     try {
         const pingResponse = await fetch('https://wordle-5rl4.onrender.com/');
         console.log("Pinged server:", pingResponse.status);
 
-        let feedback_dict = loadFeedbackDict();
+        feedback_dict = loadFeedbackDict();
         console.log("Loaded feedback dict!")
 
     } catch (error) {
