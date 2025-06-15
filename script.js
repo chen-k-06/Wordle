@@ -105,6 +105,21 @@ function updateTileBackspace(row, column, letter) {
     tile.classList.remove('filled');
 }
 
+// to load the feedback dict
+async function loadFeedbackDict() {
+    try {
+        const res = await fetch('feedback_dict.json');
+        if (!res.ok) throw new Error(res.statusText);
+
+        const text = await res.text();
+        const feedbackDict = JSON.parse(text);
+
+        return feedbackDict;
+    } catch (err) {
+        console.error("Failed to load/parse text file:", err);
+    }
+}
+
 // API functions 
 async function get_bits_remaining(guess_list) {
     let fetchError = null;
@@ -161,6 +176,9 @@ window.onload = async function () {
     try {
         const pingResponse = await fetch('https://wordle-5rl4.onrender.com/');
         console.log("Pinged server:", pingResponse.status);
+
+        feedback_dict = loadFeedbackDict();
+        console.log("Loaded feedback dict!")
 
     } catch (error) {
         console.error("Error waking up server or fetching data:", error);
