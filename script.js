@@ -191,6 +191,8 @@ window.onload = async function () {
 let valid_remaining_guesses = valid_guesses
 let guesses = []
 let feedbacks = []
+let bits = []
+bits.push(13.66)
 
 document.addEventListener('keydown', async function (event) {
     let key = event.key;
@@ -253,7 +255,11 @@ document.addEventListener('keydown', async function (event) {
                 feedback_dict
             );
             let bits_remaining = Math.log2(valid_remaining_guesses.length)
-            tile.textContent = valid_remaining_guesses.length + "pos   " + bits_remaining;
+            bits_remaining = Math.trunc(bits_remaining * 100) / 100
+            bits.push(bits_remaining)
+            tile.textContent = valid_remaining_guesses.length + "pos   " + bits_remaining + " bits";
+
+            tile = document.getElementById('row-${currentRow}-actual-bits');
         }
     }
     else if (key === 'Backspace') {
