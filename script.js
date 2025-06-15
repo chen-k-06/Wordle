@@ -23,12 +23,12 @@ function endGame(won) {
     }
 }
 
-function get_feedback(secret_word, guess) {
+function get_feedback(guess, secret_word) {
     /*Generates a feedback string based on comparing a 5-letter guess with the secret word. 
        The feedback string uses the following schema: 
-        - Correct letter, correct spot: uppercase letter ('A'-'Z')
-        - Correct letter, wrong spot: lowercase letter ('a'-'z')
-        - Letter not in the word: '-'
+        - Correct letter, correct spot: 2
+        - Correct letter, wrong spot: 1
+        - Letter not in the word: 0
 
         Args:
             guess (str): The guessed word
@@ -57,20 +57,20 @@ function get_feedback(secret_word, guess) {
     let secret_letters = secret_word.split('');
     let guess_letters = guess.split('');
 
-    const letter_count = {};
-    for (const letter of secret_letters) {
+    let letter_count = {};
+    for (let letter of secret_letters) {
         letter_count[letter] = (letter_count[letter] || 0) + 1;
     }
 
     for (let i = 0; i < 5; i++) {
-        if (guess_letters[i] == secret_letters[i]) { // green -> 2
+        if (guess_letters[i] === secret_letters[i]) { // green -> 2
             output[i] = "2";
             letter_count[guess_letters[i]] -= 1;
         }
     }
 
     for (let i = 0; i < 5; i++) { // yellow -> 1
-        if (output[i] == "0" && secret_letters.includes(guess_letters[i]) && letter_count[guess_letters[i]] > 0) {
+        if (output[i] === "0" && letter_count[guess_letters[i]] > 0) {
             output[i] = "1"
             letter_count[guess_letters[i]] -= 1;
         }
@@ -201,7 +201,7 @@ document.addEventListener('keydown', async function (event) {
     if (key === 'Enter') {
         if (currentGuess != null && currentGuess.length === MAX_WORD_LENGTH && secret_words.includes(currentGuess)) {
             console.log('Submitting guess:', currentGuess);
-            let feedback = get_feedback(secretWord, currentGuess);
+            let feedback = get_feedback(currentGuess, secretWord);
             console.log('Feedback:', feedback);
             feedbacks.push(feedback)
             guesses.push(currentGuess)
