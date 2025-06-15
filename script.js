@@ -178,8 +178,16 @@ async function get_valid_remaining_guesses(previous_guesses, feedback_list, poss
 let feedback_dict = null;
 
 window.onload = async function () {
+    try {
+        const pingResponse = await fetch('https://wordle-5rl4.onrender.com/');
+        console.log("Pinged server:", pingResponse.status);
+
+        feedback_dict = await getFeedbackDict();
+    } catch (error) {
+        console.error("Error waking up server or fetching data:", error);
+        setTimeout(() => location.reload(), 5000);
+    }
     console.log('Page is fully loaded');
-    feedback_dict = await getFeedbackDict();
 };
 
 // MAIN GAME LOOP LOGIC
