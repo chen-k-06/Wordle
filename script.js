@@ -9,7 +9,7 @@ let secret_words = get_secret_words();
 // picks a secret word for a game
 function get_secret_word() {
     let secret_word = secret_words[Math.floor(Math.random() * secret_words.length)].trim();
-    console.log("Secret word: ", secretWord)
+    console.log("Secret word: ", secret_word)
     return secret_word;
 }
 
