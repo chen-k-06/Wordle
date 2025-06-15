@@ -183,6 +183,7 @@ window.onload = async function () {
         console.log("Pinged server:", pingResponse.status);
 
         feedback_dict = await getFeedbackDict();
+        console.log("Feedback dict loaded")
     } catch (error) {
         console.error("Error waking up server or fetching data:", error);
         setTimeout(() => location.reload(), 5000);
