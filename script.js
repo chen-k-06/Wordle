@@ -177,7 +177,7 @@ async function get_valid_remaining_guesses(previous_guesses, feedback_list, poss
 
 window.onload = function () {
     console.log('Page is fully loaded');
-    feedback_dict = getFeedbackDict();
+    let feedback_dict = getFeedbackDict();
 };
 
 // MAIN GAME LOOP LOGIC
