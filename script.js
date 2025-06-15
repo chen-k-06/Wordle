@@ -9,6 +9,7 @@ let secret_words = get_secret_words();
 // picks a secret word for a game
 function get_secret_word() {
     let secret_word = secret_words[Math.floor(Math.random() * secret_words.length)].trim();
+    console.log("Secret word: ", secretWord)
     return secret_word;
 }
 
@@ -55,29 +56,27 @@ function get_feedback(secret_word, guess) {
     let output = ["0", "0", "0", "0", "0"];
     let secret_letters = secret_word.split('');
     let guess_letters = guess.split('');
-    let letter_count = {};
 
-    // Count occurrences in the secret word
-    for (let letter of secret_letters) {
+    const letter_count = {};
+    for (const letter of secret_letters) {
         letter_count[letter] = (letter_count[letter] || 0) + 1;
     }
 
-    // First pass: mark greens
     for (let i = 0; i < 5; i++) {
-        if (guess_letters[i] === secret_letters[i]) {
-            output[i] = "2"; // green
+        if (guess_letters[i] == secret_letters[i]) { // green -> 2
+            output[i] = "2";
             letter_count[guess_letters[i]] -= 1;
         }
     }
 
-    // Second pass: mark yellows
-    for (let i = 0; i < 5; i++) {
-        if (output[i] === "0" && letter_count[guess_letters[i]] > 0) {
-            output[i] = "1"; // yellow
+    for (let i = 0; i < 5; i++) { // yellow -> 1
+        if (output[i] == "0" && secret_letters.includes(guess_letters[i]) && letter_count[guess_letters[i]] > 0) {
+            output[i] = "1"
             letter_count[guess_letters[i]] -= 1;
         }
     }
-    return output.join('');
+
+    return output.join('')
 }
 
 let currentGuess = "";
@@ -104,21 +103,21 @@ function updateTileBackspace(row, column, letter) {
 }
 
 // to load the feedback dict
-async function loadFeedbackDict() {
+async function loadFeedbackCache() {
     try {
         const res = await fetch('feedback_dict.json');
         if (!res.ok) throw new Error(res.statusText);
 
         const text = await res.text();
-        const feedbackDict = JSON.parse(text);
+        const loadFeedbackCache = JSON.parse(text);
 
-        return feedbackDict;
+        return loadFeedbackCache;
     } catch (err) {
         console.error("Failed to load/parse text file:", err);
     }
 }
 
-function get_valid_remaining_guesses(previous_guesses, feedback_list, possible_answers, feedback_dict) {
+function get_valid_remaining_guesses(previous_guesses, feedback_list, possible_answers, feedback_cache) {
     /*Reduces the list of possible answers based on the most recent feedback. Returns a new list of 
        possible answers that is a subset of current_possible_answers
         
@@ -138,14 +137,14 @@ function get_valid_remaining_guesses(previous_guesses, feedback_list, possible_a
     const last_guess = previous_guesses[feedback_list.length - 1]
     const last_feedback = feedback_list[feedback_list.length - 1]
 
-    const matching_words = new Set(feedback_dict[last_guess][last_feedback])
+    const matching_words = new Set(feedback_cache[last_guess][last_feedback])
     let new_possible_answers = possible_answers.filter(word => matching_words.has(word));
 
     return new_possible_answers
 }
 
 // API functions 
-async function api_get_valid_remaining_guesses(previous_guesses, feedback_list, possible_answers, feedback_dict) {
+async function api_get_valid_remaining_guesses(previous_guesses, feedback_list, possible_answers, feedback_cache) {
     let fetchError = null;
     let result = null;
 
@@ -159,7 +158,7 @@ async function api_get_valid_remaining_guesses(previous_guesses, feedback_list, 
                 guesses: previous_guesses,
                 feedback: feedback_list,
                 current_possible_answers: possible_answers,
-                feedback_dict: feedback_dict
+                feedback_cache: feedback_cache
             })
         });
 
@@ -172,13 +171,13 @@ async function api_get_valid_remaining_guesses(previous_guesses, feedback_list, 
     return result
 }
 
-let feedback_dict = null
+let feedback_cache = null
 window.onload = async function () {
     try {
         const pingResponse = await fetch('https://wordle-5rl4.onrender.com/');
         console.log("Pinged server:", pingResponse.status);
 
-        feedback_dict = await loadFeedbackDict();
+        feedback_cache = await loadFeedbackCache();
         console.log("Loaded feedback dict!")
 
     } catch (error) {
@@ -237,7 +236,7 @@ document.addEventListener('keydown', async function (event) {
             // update posibilities / uncertainty box 
             let tile = document.getElementById(`row-${currentRow}-pos-bits`);
 
-            valid_remaining_guesses = get_valid_remaining_guesses(previous_guesses, feedback_list, valid_remaining_guesses, feedback_dict);
+            valid_remaining_guesses = get_valid_remaining_guesses(previous_guesses, feedback_list, valid_remaining_guesses, feedback_cache);
 
             let bits_remaining = Math.log2(valid_remaining_guesses.length)
             bits_remaining = Math.trunc(bits_remaining * 100) / 100
