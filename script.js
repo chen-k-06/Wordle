@@ -107,7 +107,7 @@ function updateTileBackspace(row, column, letter) {
 // API functions 
 import { decode } from "@msgpack/msgpack";
 async function loadFeedbackDict() {
-    const response = await fetch('https://github.com/chen-k-06/Wordle/blob/main/pattern_cache.msgpack');
+    const response = await fetch('https://raw.githubusercontent.com/chen-k-06/Wordle/main/pattern_cache.msgpack');
     const arrayBuffer = await response.arrayBuffer();
     const data = decode(new Uint8Array(arrayBuffer));
     console.log("Loaded feedback_dict", data);
