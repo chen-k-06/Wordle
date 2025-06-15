@@ -179,7 +179,7 @@ let feedback_dict = null;
 
 window.onload = function () {
     console.log('Page is fully loaded');
-    feedback_dict = await getFeedbackDict();
+    feedback_dict = getFeedbackDict();
 };
 
 // MAIN GAME LOOP LOGIC
