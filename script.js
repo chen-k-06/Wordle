@@ -253,7 +253,7 @@ document.addEventListener('keydown', async function (event) {
                 feedback_dict
             );
             let bits_remaining = await get_bits_remaining(valid_remaining_guesses);
-            tile.textContent = valid_remaining_guesses + "   " + bits_remaining;
+            tile.textContent = len(valid_remaining_guesses) + "   " + bits_remaining;
         }
     }
     else if (key === 'Backspace') {
