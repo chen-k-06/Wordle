@@ -184,11 +184,12 @@ window.onload = async function () {
 
 // MAIN GAME LOOP LOGIC
 // listens for key presses and responds accordingly-- aka the main game function loop
+let valid_remaining_guesses = valid_guesses
+let guesses = []
+let feedbacks = []
+
 document.addEventListener('keydown', async function (event) {
     let key = event.key;
-    let valid_remaining_guesses = valid_guesses
-    let guesses = []
-    let feedbacks = []
 
     if (key === 'Enter') {
         if (currentGuess != null && currentGuess.length === MAX_WORD_LENGTH && valid_guesses.includes(currentGuess)) {
