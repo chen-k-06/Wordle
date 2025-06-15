@@ -210,7 +210,7 @@ document.addEventListener('keydown', async function (event) {
             // debugging
             let previous_guesses = guesses;
             let feedback_list = feedbacks;
-            let possible_answers = valid_remaining_guesses; // or whatever var holds this
+            let possible_answers = valid_remaining_guesses;
 
             console.log(JSON.stringify({
                 guesses: previous_guesses,
@@ -239,18 +239,32 @@ document.addEventListener('keydown', async function (event) {
 
             currentRow++;
             currentGuess = "";
+
+            // update posibilities / uncertainty box 
+            let tile = document.getElementById(`row-${currentRow}-pos-bits`);
+
+            let previous_guesses = guesses;
+            let feedback_list = feedbacks;
+            let possible_answers = valid_remaining_guesses;
+
+            console.log("Sending to API:", {
+                guesses: previous_guesses,
+                feedback: feedback_list,
+                current_possible_answers: possible_answers,
+                feedback_dict: feedback_dict
+            });
+
+            valid_remaining_guesses = await get_valid_remaining_guesses(
+                guesses,
+                feedbacks,
+                valid_remaining_guesses,
+                feedback_dict
+            );
+            let bits_remaining = await get_bits_remaining(valid_remaining_guesses);
+            tile.textContent = valid_remaining_guesses + "   " + bits_remaining;
         }
 
-        // update posibilities / uncertainty box 
-        let tile = document.getElementById(`row-${currentRow}-pos-bits`);
-        valid_remaining_guesses = await get_valid_remaining_guesses(
-            guesses,
-            feedbacks,
-            valid_remaining_guesses,
-            feedback_dict
-        );
-        let bits_remaining = await get_bits_remaining(valid_remaining_guesses);
-        tile.textContent = valid_remaining_guesses + "   " + bits_remaining;
+
     }
     else if (key === 'Backspace') {
         event.preventDefault(); // prevents the default action of going to the previous page (?)
