@@ -194,7 +194,7 @@ document.addEventListener('keydown', function (event) {
             let feedback = get_feedback(secretWord, currentGuess);
             console.log('Feedback:', feedback);
             feedbacks.push(feedback)
-            guesses.push(guess)
+            guesses.push(currentGuess)
 
             for (let i = 0; i < MAX_WORD_LENGTH; i++) {
                 let tile = document.getElementById(`row-${currentRow}-col-${i}`);
