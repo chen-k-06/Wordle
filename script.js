@@ -206,6 +206,12 @@ document.addEventListener('keydown', async function (event) {
             console.log('Feedback:', feedback);
             feedbacks.push(feedback)
             guesses.push(currentGuess)
+            console.log(JSON.stringify({
+                guesses: previous_guesses,
+                feedback: feedback_list,
+                current_possible_answers: possible_answers,
+                feedback_dict: feedback_dict
+            }));
 
             for (let i = 0; i < MAX_WORD_LENGTH; i++) {
                 let tile = document.getElementById(`row-${currentRow}-col-${i}`);
