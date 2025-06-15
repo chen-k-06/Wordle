@@ -206,6 +206,8 @@ document.addEventListener('keydown', async function (event) {
             console.log('Feedback:', feedback);
             feedbacks.push(feedback)
             guesses.push(currentGuess)
+
+            // debugging
             console.log(JSON.stringify({
                 guesses: previous_guesses,
                 feedback: feedback_list,
