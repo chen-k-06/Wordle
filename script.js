@@ -125,23 +125,23 @@ function get_valid_remaining_guesses(previous_guesses, feedback_list, possible_a
         Args:
          guesses (list): A list of string guesses, which could be empty
          feedback (list): A list of feedback strings, which could be empty
-         current_possible_answers (list): a list of possible words that could be the secret word, 
+         possible_answers (list): a list of possible words that could be the secret word, 
             not yet updated based on most recent feedback. Cannot be empty.
 
         Returns:
          possible_answers (list): a list of remaining possible words that could be the secret word
     */
     if (previous_guesses.length === 0 || previous_guesses[0] === "") {
-        return current_possible_answers
+        return possible_answers
     }
 
     const last_guess = previous_guesses[feedback.length - 1]
     const last_feedback = feedback_list[feedback.length - 1]
 
     const matching_words = new Set(feedback_dict[last_guess][last_feedback])
-    const possible_answers = current_possible_answers.filter(word => matching_words.has(word));
+    let new_possible_answers = possible_answers.filter(word => matching_words.has(word));
 
-    return list(possible_answers)
+    return list(new_possible_answers)
 }
 
 // API functions 
