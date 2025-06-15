@@ -118,32 +118,34 @@ async function loadFeedbackDict() {
     }
 }
 
-// API functions 
-async function get_bits_remaining(guess_list) {
-    let fetchError = null;
-    let result = null;
+function get_valid_remaining_guesses(previous_guesses, feedback_list, possible_answers, feedback_dict) {
+    /*Reduces the list of possible answers based on the most recent feedback. Returns a new list of 
+       possible answers that is a subset of current_possible_answers
+        
+        Args:
+         guesses (list): A list of string guesses, which could be empty
+         feedback (list): A list of feedback strings, which could be empty
+         current_possible_answers (list): a list of possible words that could be the secret word, 
+            not yet updated based on most recent feedback. Cannot be empty.
 
-    try {
-        const response = await fetch('https://wordle-5rl4.onrender.com/bits_remaining', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                word_list: guess_list
-            })
-        });
-
-        result = await response.json();
-        console.log('Response:', result);
-    } catch (error) {
-        fetchError = error;
-        console.error('Fetch error:', fetchError);
+        Returns:
+         possible_answers (list): a list of remaining possible words that could be the secret word
+    */
+    if (previous_guesses.length === 0 || previous_guesses[0] === "") {
+        return current_possible_answers
     }
-    return result
+
+    const last_guess = previous_guesses[feedback.length - 1]
+    const last_feedback = feedback_list[feedback.length - 1]
+
+    const matching_words = new Set(feedback_dict[last_guess][last_feedback])
+    const possible_answers = current_possible_answers.filter(word => matching_words.has(word));
+
+    return list(possible_answers)
 }
 
-async function get_valid_remaining_guesses(previous_guesses, feedback_list, possible_answers, feedback_dict) {
+// API functions 
+async function api_get_valid_remaining_guesses(previous_guesses, feedback_list, possible_answers, feedback_dict) {
     let fetchError = null;
     let result = null;
 
@@ -235,19 +237,7 @@ document.addEventListener('keydown', async function (event) {
             // update posibilities / uncertainty box 
             let tile = document.getElementById(`row-${currentRow}-pos-bits`);
 
-            console.log("Sending to API:", {
-                guesses: previous_guesses,
-                feedback: feedback_list,
-                current_possible_answers: valid_remaining_guesses,
-                feedback_dict: feedback_dict
-            });
-
-            valid_remaining_guesses = await get_valid_remaining_guesses(
-                previous_guesses,
-                feedback_list,
-                valid_remaining_guesses,
-                feedback_dict
-            );
+            valid_remaining_guesses = get_valid_remaining_guesses(previous_guesses, feedback_list, valid_remaining_guesses, feedback_dict);
 
             let bits_remaining = Math.log2(valid_remaining_guesses.length)
             bits_remaining = Math.trunc(bits_remaining * 100) / 100
