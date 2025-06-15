@@ -177,14 +177,14 @@ async function get_valid_remaining_guesses(previous_guesses, feedback_list, poss
 
 let feedback_dict = null;
 
-window.onload = function () {
+window.onload = async function () {
     console.log('Page is fully loaded');
-    feedback_dict = getFeedbackDict();
+    feedback_dict = await getFeedbackDict();
 };
 
 // MAIN GAME LOOP LOGIC
 // listens for key presses and responds accordingly-- aka the main game function loop
-document.addEventListener('keydown', function (event) {
+document.addEventListener('keydown', async function (event) {
     let key = event.key;
     let valid_remaining_guesses = valid_guesses
     let guesses = []
@@ -222,8 +222,13 @@ document.addEventListener('keydown', function (event) {
 
         // update posibilities / uncertainty box 
         let tile = document.getElementById(`row-${currentRow}-pos-bits`);
-        valid_remaining_guesses = get_valid_remaining_guesses(guesses, feedbacks, valid_remaining_guesses, feedback_dict);
-        let bits_remaining = get_bits_remaining(valid_remaining_guesses);
+        valid_remaining_guesses = await get_valid_remaining_guesses(
+            guesses,
+            feedbacks,
+            valid_remaining_guesses,
+            feedback_dict
+        );
+        let bits_remaining = await get_bits_remaining(valid_remaining_guesses);
         tile.textContent = valid_remaining_guesses + "   " + bits_remaining;
     }
     else if (key === 'Backspace') {
