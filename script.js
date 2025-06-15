@@ -1,12 +1,6 @@
-function count(word, x) {
-    let count = 0;
-    for (let letter of word) {
-        if (letter === x) {
-            count++;
-        }
-    }
-    return count;
-}
+/*https://wordle-5rl4.onrender.com
+API server 
+*/
 
 // gets the list of all valid secret words
 import { get_secret_words } from './wordle_secret_words.js';
@@ -110,6 +104,59 @@ function updateTileBackspace(row, column, letter) {
     tile.classList.remove('filled');
 }
 
+async function getFeedbackDict() {
+    let fetchError = null;
+    let result = null;
+
+    try {
+        const response = await fetch('https://wordle-5rl4.onrender.com');
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const result = await response.json();
+        console.log('API Response:', result);
+    } catch (error) {
+        fetchError = error;
+        console.error('Fetch error:', fetchError);
+    }
+
+}
+
+
+async function getFeedbackDict() {
+    let fetchError = null;
+    let result = null;
+
+    try {
+        const response = await fetch('https://wordle-5rl4.onrender.com', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                possible_guesses: ['crane', 'slate'],
+                possible_answers: ['crane'],
+                feedback_dict: { crane: { '22222': ['crane'] } },
+                all_patterns: ['22222']
+            })
+        });
+
+        result = await response.json();
+        console.log('Response:', result);
+    } catch (error) {
+        fetchError = error;
+        console.error('Fetch error:', fetchError);
+    }
+
+}
+
+window.onload = function () {
+    console.log('Page is fully loaded');
+    feedback_dict = getFeedbackDict();
+};
+
+// MAIN GAME LOOP LOGIC
 // listens for key presses and responds accordingly-- aka the main game function loop
 document.addEventListener('keydown', function (event) {
     let key = event.key;
