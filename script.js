@@ -208,6 +208,10 @@ document.addEventListener('keydown', async function (event) {
             guesses.push(currentGuess)
 
             // debugging
+            let previous_guesses = guesses;
+            let feedback_list = feedbacks;
+            let possible_answers = valid_remaining_guesses; // or whatever var holds this
+
             console.log(JSON.stringify({
                 guesses: previous_guesses,
                 feedback: feedback_list,
