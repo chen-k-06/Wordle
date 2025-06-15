@@ -8,7 +8,6 @@ let secret_words = get_secret_words();
 
 // picks a secret word for a game
 function get_secret_word() {
-    let secret_words = get_secret_words();
     let secret_word = secret_words[Math.floor(Math.random() * secret_words.length)].trim();
     return secret_word;
 }
@@ -109,7 +108,7 @@ import { decode } from "@msgpack/msgpack";
 async function loadFeedbackDict() {
     const response = await fetch('https://raw.githubusercontent.com/chen-k-06/Wordle/main/pattern_cache.msgpack');
     const arrayBuffer = await response.arrayBuffer();
-    const data = msgpack.decode(new Uint8Array(arrayBuffer));
+    const data = decode(new Uint8Array(arrayBuffer));
     console.log("Loaded feedback_dict", data);
     return data;
 }
