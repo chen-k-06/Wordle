@@ -4,7 +4,9 @@ API server
 
 // gets the list of all valid secret words
 import { get_secret_words } from './wordle_secret_words.js';
+import { get_feedback_dict } from './get_feedback_dict.js';
 let secret_words = get_secret_words();
+let feedback_dict = get_feedback_dict();
 
 // picks a secret word for a game
 function get_secret_word() {
@@ -104,26 +106,6 @@ function updateTileBackspace(row, column, letter) {
 }
 
 // API functions 
-// import { decode } from "https://cdn.jsdelivr.net/npm/@msgpack/msgpack@2.7.1/dist.es2019/esm/msgpack.min.js";
-async function loadFeedbackDict() {
-    if (!window.msgpack) {
-        console.error("msgpack library hasn't loaded!");
-        return;
-    }
-
-    try {
-        const response = await fetch(
-            "https://raw.githubusercontent.com/chen-k-06/Wordle/main/pattern_cache.msgpack"
-        );
-        const buffer = await response.arrayBuffer();
-        const data = window.msgpack.decode(new Uint8Array(buffer));
-        console.log("Loaded feedback_dict:", data);
-        return data;
-    } catch (err) {
-        console.error("Failed to load/parse msgpack file:", err);
-    }
-}
-
 async function get_bits_remaining(guess_list) {
     let fetchError = null;
     let result = null;
@@ -175,15 +157,11 @@ async function get_valid_remaining_guesses(previous_guesses, feedback_list, poss
     return result
 }
 
-let feedback_dict = null;
-
 window.onload = async function () {
     try {
         const pingResponse = await fetch('https://wordle-5rl4.onrender.com/');
         console.log("Pinged server:", pingResponse.status);
 
-        feedback_dict = await loadFeedbackDict();
-        console.log("Feedback dict loaded")
     } catch (error) {
         console.error("Error waking up server or fetching data:", error);
         setTimeout(() => location.reload(), 5000);
