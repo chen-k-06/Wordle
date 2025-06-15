@@ -106,11 +106,14 @@ function updateTileBackspace(row, column, letter) {
 // API functions 
 // import { decode } from "https://cdn.jsdelivr.net/npm/@msgpack/msgpack@2.7.1/dist.es2019/esm/msgpack.min.js";
 async function loadFeedbackDict() {
-    const response = await fetch('https://raw.githubusercontent.com/chen-k-06/Wordle/main/pattern_cache.msgpack');
-    const arrayBuffer = await response.arrayBuffer();
-    const data = window.msgpack.decode(new Uint8Array(arrayBuffer)); // Use window.msgpack
-    console.log("Loaded feedback_dict", data);
-    return data;
+    const feedbackDict = window.feedbackDict;
+    if (!feedbackDict) {
+        console.error("feedbackDict not loaded yet.");
+        return;
+    }
+
+    console.log("Accessed in script.js:", feedbackDict);
+    return feedbackDict;
 }
 
 async function get_bits_remaining(guess_list) {

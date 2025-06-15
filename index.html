@@ -129,6 +129,17 @@
     </h4>
 
     <script src="https://cdn.jsdelivr.net/npm/@msgpack/msgpack@2.7.1/dist/msgpack.min.js"></script>
+    <script>
+        async function loadFeedbackDict() {
+            const response = await fetch('https://raw.githubusercontent.com/chen-k-06/Wordle/main/pattern_cache.msgpack');
+            const arrayBuffer = await response.arrayBuffer();
+            const data = window.msgpack.decode(new Uint8Array(arrayBuffer)); // Must be after msgpack is loaded
+            console.log("Loaded feedback_dict", data);
+            window.feedbackDict = data;
+        }
+
+        window.addEventListener("load", loadFeedbackDict);
+    </script>
     <script type="module" src="script.js"></script>
 </body>
 
