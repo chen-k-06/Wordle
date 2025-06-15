@@ -109,7 +109,7 @@ import { decode } from "@msgpack/msgpack";
 async function loadFeedbackDict() {
     const response = await fetch('https://raw.githubusercontent.com/chen-k-06/Wordle/main/pattern_cache.msgpack');
     const arrayBuffer = await response.arrayBuffer();
-    const data = decode(new Uint8Array(arrayBuffer));
+    const data = msgpack.decode(new Uint8Array(arrayBuffer));
     console.log("Loaded feedback_dict", data);
     return data;
 }
