@@ -141,7 +141,7 @@ function get_valid_remaining_guesses(previous_guesses, feedback_list, possible_a
     const matching_words = new Set(feedback_dict[last_guess][last_feedback])
     let new_possible_answers = possible_answers.filter(word => matching_words.has(word));
 
-    return list(new_possible_answers)
+    return new_possible_answers
 }
 
 // API functions 
