@@ -175,7 +175,7 @@ window.onload = async function () {
         const pingResponse = await fetch('https://wordle-5rl4.onrender.com/');
         console.log("Pinged server:", pingResponse.status);
 
-        feedback_dict = loadFeedbackDict();
+        let feedback_dict = loadFeedbackDict();
         console.log("Loaded feedback dict!")
 
     } catch (error) {
