@@ -198,7 +198,7 @@ document.addEventListener('keydown', async function (event) {
     let key = event.key;
 
     if (key === 'Enter') {
-        if (currentGuess != null && currentGuess.length === MAX_WORD_LENGTH && valid_guesses.includes(currentGuess)) {
+        if (currentGuess != null && currentGuess.length === MAX_WORD_LENGTH && secret_words.includes(currentGuess)) {
             console.log('Submitting guess:', currentGuess);
             let feedback = get_feedback(secretWord, currentGuess);
             console.log('Feedback:', feedback);
@@ -210,12 +210,6 @@ document.addEventListener('keydown', async function (event) {
             let feedback_list = feedbacks;
             let possible_answers = valid_remaining_guesses;
 
-            console.log(JSON.stringify({
-                guesses: previous_guesses,
-                feedback: feedback_list,
-                current_possible_answers: possible_answers,
-                feedback_dict: feedback_dict
-            }));
 
             for (let i = 0; i < MAX_WORD_LENGTH; i++) {
                 let tile = document.getElementById(`row-${currentRow}-col-${i}`);
@@ -244,20 +238,21 @@ document.addEventListener('keydown', async function (event) {
             console.log("Sending to API:", {
                 guesses: previous_guesses,
                 feedback: feedback_list,
-                current_possible_answers: possible_answers,
+                current_possible_answers: valid_remaining_guesses,
                 feedback_dict: feedback_dict
             });
 
             valid_remaining_guesses = await get_valid_remaining_guesses(
-                guesses,
-                feedbacks,
+                previous_guesses,
+                feedback_list,
                 valid_remaining_guesses,
                 feedback_dict
             );
+
             let bits_remaining = Math.log2(valid_remaining_guesses.length)
             bits_remaining = Math.trunc(bits_remaining * 100) / 100
             bits.push(bits_remaining)
-            tile.textContent = valid_remaining_guesses.length + "pos   " + bits_remaining + " bits";
+            tile.textContent = valid_remaining_guesses.length + " pos, " + bits_remaining + " bits";
 
             tile = document.getElementById('row-${currentRow}-actual-bits');
         }
