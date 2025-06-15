@@ -115,13 +115,13 @@ async function getFeedbackDict() {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const result = await response.json();
+        result = await response.json();
         console.log('API Response:', result);
     } catch (error) {
         fetchError = error;
         console.error('Fetch error:', fetchError);
     }
-
+    return result
 }
 
 async function get_bits_remaining(guess_list) {
@@ -148,6 +148,33 @@ async function get_bits_remaining(guess_list) {
     return result
 }
 
+async function get_valid_remaining_guesses(previous_guesses, feedback_list, possible_answers, feedback_dict) {
+    let fetchError = null;
+    let result = null;
+
+    try {
+        const response = await fetch('https://wordle-5rl4.onrender.com/get_remaining_guesses', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                guesses: previous_guesses,
+                feedback: feedback_list,
+                current_possible_answers: possible_answers,
+                feedback_dict: feedback_dict
+            })
+        });
+
+        result = await response.json();
+        console.log('Response:', result);
+    } catch (error) {
+        fetchError = error;
+        console.error('Fetch error:', fetchError);
+    }
+    return result
+}
+
 window.onload = function () {
     console.log('Page is fully loaded');
     feedback_dict = getFeedbackDict();
@@ -157,11 +184,17 @@ window.onload = function () {
 // listens for key presses and responds accordingly-- aka the main game function loop
 document.addEventListener('keydown', function (event) {
     let key = event.key;
+    let valid_remaining_guesses = valid_guesses
+    let guesses = []
+    let feedbacks = []
+
     if (key === 'Enter') {
         if (currentGuess != null && currentGuess.length === MAX_WORD_LENGTH && valid_guesses.includes(currentGuess)) {
             console.log('Submitting guess:', currentGuess);
             let feedback = get_feedback(secretWord, currentGuess);
             console.log('Feedback:', feedback);
+            feedbacks.push(feedback)
+            guesses.push(guess)
 
             for (let i = 0; i < MAX_WORD_LENGTH; i++) {
                 let tile = document.getElementById(`row-${currentRow}-col-${i}`);
@@ -184,6 +217,12 @@ document.addEventListener('keydown', function (event) {
             currentRow++;
             currentGuess = "";
         }
+
+        // update posibilities / uncertainty box 
+        let tile = document.getElementById(`row-${currentRow}-pos-bits`);
+        valid_remaining_guesses = get_valid_remaining_guesses(guesses, feedbacks, valid_remaining_guesses, feedback_dict);
+        bits_remining = get_bits_remaining(valid_remaining_guesses);
+        tile.textContent = valid_remaining_guesses + "   " + bits_remining;
     }
     else if (key === 'Backspace') {
         event.preventDefault(); // prevents the default action of going to the previous page (?)
