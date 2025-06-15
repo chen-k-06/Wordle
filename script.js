@@ -223,8 +223,8 @@ document.addEventListener('keydown', function (event) {
         // update posibilities / uncertainty box 
         let tile = document.getElementById(`row-${currentRow}-pos-bits`);
         valid_remaining_guesses = get_valid_remaining_guesses(guesses, feedbacks, valid_remaining_guesses, feedback_dict);
-        bits_remining = get_bits_remaining(valid_remaining_guesses);
-        tile.textContent = valid_remaining_guesses + "   " + bits_remining;
+        let bits_remaining = get_bits_remaining(valid_remaining_guesses);
+        tile.textContent = valid_remaining_guesses + "   " + bits_remaining;
     }
     else if (key === 'Backspace') {
         event.preventDefault(); // prevents the default action of going to the previous page (?)
