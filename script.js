@@ -105,23 +105,13 @@ function updateTileBackspace(row, column, letter) {
 }
 
 // API functions 
-async function getFeedbackDict() {
-    let fetchError = null;
-    let result = null;
-
-    try {
-        const response = await fetch('https://wordle-5rl4.onrender.com/get_feedback_dict');
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        result = await response.json();
-        console.log('API Response:', result);
-    } catch (error) {
-        fetchError = error;
-        console.error('Fetch error:', fetchError);
-    }
-    return result
+import { decode } from "@msgpack/msgpack";
+async function loadFeedbackDict() {
+    const response = await fetch('https://github.com/chen-k-06/Wordle/blob/main/pattern_cache.msgpack');
+    const arrayBuffer = await response.arrayBuffer();
+    const data = decode(new Uint8Array(arrayBuffer));
+    console.log("Loaded feedback_dict", data);
+    return data;
 }
 
 async function get_bits_remaining(guess_list) {
@@ -182,7 +172,7 @@ window.onload = async function () {
         const pingResponse = await fetch('https://wordle-5rl4.onrender.com/');
         console.log("Pinged server:", pingResponse.status);
 
-        feedback_dict = await getFeedbackDict();
+        feedback_dict = await loadFeedbackDict();
         console.log("Feedback dict loaded")
     } catch (error) {
         console.error("Error waking up server or fetching data:", error);
