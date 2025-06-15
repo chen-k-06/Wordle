@@ -243,10 +243,6 @@ document.addEventListener('keydown', async function (event) {
             // update posibilities / uncertainty box 
             let tile = document.getElementById(`row-${currentRow}-pos-bits`);
 
-            let previous_guesses = guesses;
-            let feedback_list = feedbacks;
-            let possible_answers = valid_remaining_guesses;
-
             console.log("Sending to API:", {
                 guesses: previous_guesses,
                 feedback: feedback_list,
@@ -263,8 +259,6 @@ document.addEventListener('keydown', async function (event) {
             let bits_remaining = await get_bits_remaining(valid_remaining_guesses);
             tile.textContent = valid_remaining_guesses + "   " + bits_remaining;
         }
-
-
     }
     else if (key === 'Backspace') {
         event.preventDefault(); // prevents the default action of going to the previous page (?)
