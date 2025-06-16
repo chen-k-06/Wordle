@@ -55,8 +55,8 @@ def calculate_entropies(possible_guesses: list[str], possible_answers: list[str]
             entropies[guess] = entropy(counts, base = 2)
         else: 
             entropies[guess] = 0.0
-
-    return entropies
+    sorted_entropies = dict(sorted(entropies.items(), key=lambda item: item[1], reverse=True))
+    return sorted_entropies
 
 class GetEntropies(BaseModel):
     possible_guesses: list[str]
