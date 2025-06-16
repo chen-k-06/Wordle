@@ -107,5 +107,10 @@ class GetEntropies(BaseModel):
 
 @app.post("/get_entropies")
 def get_entropies(request: GetEntropies) -> dict: 
+    global feedback_dict
+
+    if feedback_dict is None:
+        feedback_dict = get_feedback_dict(request.possible_guesses)
+
     result = calculate_entropies(request.possible_guesses, request.possible_answers, request.all_patterns)
     return result

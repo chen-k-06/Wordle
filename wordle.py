@@ -17,7 +17,6 @@ def wordle_game(secret_word: str):
     if os.path.exists("pattern_cache.pkl"):
         with open("pattern_cache.pkl", "rb") as file:
             feedback_dict = pickle.load(file)
-        print("feedback_dict loaded with", len(feedback_dict), "guesses")
 
     else: 
         feedback_dict = generate_feedback_dict(valid_guesses)
@@ -27,26 +26,20 @@ def wordle_game(secret_word: str):
 
     #user input guesses
     for i in range(6):
-        guess = ""
+        guess = "hint"
 
         while (guess.upper() not in valid_guesses): 
-            guess = input("Enter guess, or 'hint' for a hint: ")
+            # guess = input("Enter guess, or 'hint' for a hint: ")
 
             #AI guess input
             if (guess.upper() == "HINT"):
-                    # if i == 0:
-                    #     guess = "CRANE"
-                    #     break
+                    if i == 0:
+                        guess = "SOARE"
+                        break
                     guess = calculate_entropies(secret_words, possible_secret_words, feedback_dict, all_patterns)
                     sorted_items = sorted(guess.items(), key=lambda item: item[1], reverse=True)
                     guess = sorted_items[0]
                     guess = guess[0]
-                    i = 0
-                    for guess, entropy in sorted_items:
-                        print("guess:  ", guess, "   entropy: ", entropy)
-                        i +=1
-                        if (i> 7):
-                            break
                     break
 
             elif (guess.upper() not in valid_guesses): 
@@ -68,13 +61,13 @@ def wordle_game(secret_word: str):
                 print(Back.LIGHTBLACK_EX + ' ', end = '')
                 for k in range(len(feedback)):
                     if feedback[k] == '0':
-                        print(Back.LIGHTBLACK_EX + guess[i].upper(), end='')
+                        print(Back.LIGHTBLACK_EX + guess[k].upper(), end='')
                     
                     elif feedback[k] == '1':
-                        print(Back.YELLOW + guess[i].upper() , end='')
+                        print(Back.YELLOW + guess[k].upper() , end='')
 
                     else:
-                        print(Back.GREEN + guess[i].upper() , end='')
+                        print(Back.GREEN + guess[k].upper() , end='')
 
                 print(Back.LIGHTBLACK_EX + ' ')
             if (guess.upper() == secret_word.upper()): 

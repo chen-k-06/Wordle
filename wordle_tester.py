@@ -19,8 +19,6 @@ if __name__ == "__main__":
             guesses_needed.append(result)
         print("num guesses needed: ", result)
         print("games played: ", successful_games)
-        if successful_games == 300:
-            break
     
     accuracy = (successful_games/num_of_words) * 100
 
