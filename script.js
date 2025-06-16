@@ -303,5 +303,6 @@ document.addEventListener('keydown', async function (event) {
     if (currentRow === 7) {
         endGame(false, secretWord);
         gameOver = true;
+        return;
     }
 })
