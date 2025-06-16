@@ -166,7 +166,7 @@ function get_valid_remaining_guesses(previous_guesses, feedback_list, possible_a
 }
 
 // API functions 
-async function rank_guesses(possible_guesses, possible_answers, all_patterns) {
+async function rank_guesses(possible_guesses, possible_answers) {
     let fetchError = null;
     let result = null;
 
@@ -179,7 +179,6 @@ async function rank_guesses(possible_guesses, possible_answers, all_patterns) {
             body: JSON.stringify({
                 possible_guesses: possible_guesses,
                 possible_answers: possible_answers,
-                all_patterns: all_patterns
             })
         });
 
@@ -211,11 +210,9 @@ window.onload = async function () {
 // MAIN GAME LOOP LOGIC
 // listens for key presses and responds accordingly-- aka the main game function loop
 let valid_remaining_guesses = secret_words
-let all_patterns = get_all_patterns()
 let guesses = []
 let feedbacks = []
 let bits = []
-let gameOver = false
 bits.push(13.66)
 
 document.addEventListener('keydown', async function (event) {
@@ -271,7 +268,7 @@ document.addEventListener('keydown', async function (event) {
             tile.textContent = Math.trunc(bits[guesses.length - 1] * 100) / 100 - bits_remaining + " bits";
 
             // re rank guesses 
-            let guesses_ranked = await rank_guesses(secret_words, valid_remaining_guesses, all_patterns);
+            let guesses_ranked = await rank_guesses(secret_words, valid_remaining_guesses);
             let entries = Object.entries(guesses_ranked);
             console.log('Top guesses:', guesses_ranked);
 

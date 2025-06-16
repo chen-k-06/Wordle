@@ -6,13 +6,14 @@ from typing import Dict
 import os
 import pickle
 from fastapi.middleware.cors import CORSMiddleware
-from wordle_helper_functions import get_pattern
+from wordle_helper_functions import get_pattern, get_all_patterns
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins temporarily
+    allow_origins=["https://chen-k-06.github.io"],  # frontend URL
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -63,7 +64,7 @@ def generate_feedback_dict(guesses):
 # -----------------------------------------------
 # Calculate entropies / rank guesses functions
 # -----------------------------------------------
-def calculate_entropies(possible_guesses: list[str], possible_answers: list[str], all_patterns: list[str]) -> Dict[str, float]:
+def calculate_entropies(possible_guesses: list[str], possible_answers: list[str]) -> Dict[str, float]:
     '''
     Calculates the entropy for every guess in possible guesses, taking into account 
     the remaining possible answers. 
@@ -76,6 +77,7 @@ def calculate_entropies(possible_guesses: list[str], possible_answers: list[str]
     '''
     entropies = {}
     feedback_dict = get_feedback_dict(possible_guesses)
+    all_patterns = get_all_patterns()
     possible_answers = set(possible_answers)
     if len(possible_answers) <= 2:
         return {answer: 100 for answer in possible_answers}
@@ -102,7 +104,6 @@ def calculate_entropies(possible_guesses: list[str], possible_answers: list[str]
 class GetEntropies(BaseModel):
     possible_guesses: list[str]
     possible_answers: list[str]
-    all_patterns: list[str]
 
 @app.post("/get_entropies")
 def get_entropies(request: GetEntropies) -> dict: 
@@ -112,5 +113,5 @@ def get_entropies(request: GetEntropies) -> dict:
     if feedback_dict is None:
         feedback_dict = get_feedback_dict(request.possible_guesses)
 
-    result = calculate_entropies(request.possible_guesses, request.possible_answers, request.all_patterns)
+    result = calculate_entropies(request.possible_guesses, request.possible_answers)
     return result
