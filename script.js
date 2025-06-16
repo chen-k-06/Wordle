@@ -274,15 +274,18 @@ document.addEventListener('keydown', async function (event) {
             let entries = Object.entries(guesses_ranked);
             console.log('Top guesses:', guesses_ranked);
 
-            let i = 0;
+            // reset tile contents
+            for (let i = 0; i < 6; i++) {
+                tile = document.getElementById(`row-${i}-top-picks`);
+                tile.textContent = " "
+            }
+
+            // populate tiles
             for (let i = 0; i < Math.min(6, entries.length); i++) {
                 const [guess, entropy] = entries[i];
-                if (i >= 6) {
-                    break;
-                }
                 tile = document.getElementById(`row-${i}-top-picks`);
                 if (tile) {
-                    tile.textContent = `${guess}   ${entropy.toFixed(2)}`;
+                    tile.textContent = `${guess}, ${entropy.toFixed(2)}`;
                 }
                 i++;
             }
