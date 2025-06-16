@@ -193,7 +193,7 @@ async function rank_guesses(possible_guesses, possible_answers, feedback_dict, a
     return result
 }
 
-let feedback_cache = null
+let feedback_cache = new Map()
 window.onload = async function () {
     try {
         const pingResponse = await fetch('https://wordle-5rl4.onrender.com/');
@@ -273,12 +273,16 @@ document.addEventListener('keydown', async function (event) {
             let guesses_ranked = await rank_guesses(secret_words, valid_remaining_guesses, feedback_cache, all_patterns)
             console.log('Top guesses:', guesses_ranked);
 
-            for (let i = 0; i < 6; i++) {
-                if (i >= guesses_ranked.size) {
+            let i = 0;
+            for (const [guess, entropy] of guesses_ranked) {
+                if (i >= 6) {
                     break;
                 }
                 tile = document.getElementById(`row-${i}-top-picks`);
-                tile.textContent = guesses_ranked.entries().next().value;
+                if (tile) {
+                    tile.textContent = `${guess}   ${entropy.toFixed(2)}`;
+                }
+                i++;
             }
         }
     }
