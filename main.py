@@ -70,7 +70,7 @@ def calculate_entropies(possible_guesses: list[str], possible_answers: list[str]
             entropies (list): a list of entropies that correspond to each guess in possible_guesses
     '''
     entropies = {}
-    feedback_dict = generate_feedback_dict(possible_guesses)
+    feedback_dict = get_feedback_dict(possible_guesses)
     possible_answers = set(possible_answers)
     if len(possible_answers) <= 2:
         return {answer: 100 for answer in possible_answers}
