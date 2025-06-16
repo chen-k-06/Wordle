@@ -246,7 +246,6 @@ document.addEventListener('keydown', async function (event) {
             }
             if (feedback === "22222") { // checks for win
                 endGame(true, secretWord);
-                gameOver = true;
                 return;
             }
 
@@ -265,7 +264,7 @@ document.addEventListener('keydown', async function (event) {
 
             // update actual bits tile
             tile = document.getElementById(`row-${currentRow - 1}-actual-bits`);
-            tile.textContent = Math.trunc(bits[guesses.length - 1] * 100) / 100 - bits_remaining + " bits";
+            tile.textContent = (Math.trunc(bits[guesses.length - 1] * 100) / 100) - (Math.trunc(bits_remaining * 100) / 100) + " bits";
 
             // re rank guesses 
             console.log("Sending to API: secret words:", secret_words, " valid remaining guesses: ", valid_remaining_guesses)
@@ -276,6 +275,8 @@ document.addEventListener('keydown', async function (event) {
             // reset tile contents
             for (let i = 0; i < 6; i++) {
                 tile = document.getElementById(`row-${i}-top-picks`);
+                tile.classList.remove("fly-in");
+                tile.classList.add("fly-out");
                 tile.textContent = " "
             }
 
@@ -283,6 +284,8 @@ document.addEventListener('keydown', async function (event) {
             for (let i = 0; i < Math.min(6, entries.length); i++) {
                 const [guess, entropy] = entries[i];
                 tile = document.getElementById(`row-${i}-top-picks`);
+                tile.classList.remove("fly-out");
+                tile.classList.add("fly-in");
                 tile.textContent = `${guess}, ${entropy.toFixed(2)} bits`;
             }
         }
@@ -302,7 +305,6 @@ document.addEventListener('keydown', async function (event) {
     }
     if (currentRow === 7) {
         endGame(false, secretWord);
-        gameOver = true;
         return;
     }
 })

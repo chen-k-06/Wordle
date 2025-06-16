@@ -4,6 +4,7 @@ body {
     text-align: center;
     color: white;
     font-size: 1rem;
+    font-weight: 700;
 }
 
 button {
@@ -56,6 +57,7 @@ button:hover {
     padding: 15px;
     align-items: center;
     justify-content: center;
+    display: flex;
     width: 173.5px;
 }
 
@@ -111,6 +113,38 @@ button:hover {
 
 .filled {
     border: 2px solid white;
+}
+
+@keyframes flyIn {
+    0% {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0px);
+        opacity: 1;
+    }
+}
+
+@keyframes flyOut {
+    0% {
+        transform: translateY(0px);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+}
+
+.fly-in {
+    animation: flyIn 0.5s ease forwards;
+}
+
+.fly-out {
+    animation: flyOut 0.5s ease forwards;
 }
 
 @media (max-width: 400px) {
