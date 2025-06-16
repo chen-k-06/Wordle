@@ -272,8 +272,10 @@ document.addEventListener('keydown', async function (event) {
             let guesses_ranked = rank_guesses(secret_words, valid_remaining_guesses, feedback_cache, all_patterns)
 
             for (let i = 0; i < 6; i++) {
-                tile = document.getElementById(`row-${currentRow}-top-picks`);
-                tile.textContent = guesses_ranked[i]
+                tile = document.getElementById(`row-${i}-top-picks`);
+                if (tile && guesses_ranked[i]) {
+                    tile.textContent = guesses_ranked[i];
+                }
             }
         }
     }
