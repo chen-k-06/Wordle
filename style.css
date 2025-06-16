@@ -43,6 +43,11 @@ button:hover {
     margin: 5px;
 }
 
+.row .text-box {
+    color: white;
+    font-size: 1rem;
+}
+
 .box {
     width: 70px;
     height: 70px;
