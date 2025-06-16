@@ -48,6 +48,12 @@ button:hover {
     padding: 15px;
 }
 
+.row .red-text-box {
+    color: lightcoral;
+    font-size: 1rem;
+    padding: 15px;
+}
+
 .box {
     width: 70px;
     height: 70px;

@@ -267,7 +267,7 @@ document.addEventListener('keydown', async function (event) {
             tile.textContent = valid_remaining_guesses.length + " possibilities, " + bits_remaining + " bits";
 
             // update actual bits tile
-            tile = document.getElementById(`row-${currentRow}-actual-bits`);
+            tile = document.getElementById(`row-${currentRow - 1}-actual-bits`);
             tile.textContent = bits[guesses.length - 1] - bits_remaining + " bits"
 
             // re rank guesses 
