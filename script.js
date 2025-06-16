@@ -117,6 +117,28 @@ async function loadFeedbackCache() {
     }
 }
 
+function get_all_patterns() {
+    /*
+    Returns all possible feedback patterns-- aka all orderings of 0, 1, and 2 
+    that are 5 digits long, with replacement
+    */
+    const digits = ['0', '1', '2']
+    const patterns = []
+
+    for (let a of digits) {
+        for (let b of digits) {
+            for (let c of digits) {
+                for (let d of digits) {
+                    for (let e of digits) {
+                        patterns.push(a + b + c + d + e)
+                    }
+                }
+            }
+        }
+    }
+    return patterns
+}
+
 function get_valid_remaining_guesses(previous_guesses, feedback_list, possible_answers, feedback_cache) {
     /*Reduces the list of possible answers based on the most recent feedback. Returns a new list of 
        possible answers that is a subset of current_possible_answers
@@ -144,21 +166,21 @@ function get_valid_remaining_guesses(previous_guesses, feedback_list, possible_a
 }
 
 // API functions 
-async function api_get_valid_remaining_guesses(previous_guesses, feedback_list, possible_answers, feedback_cache) {
+async function rank_guesses(possible_guesses, possible_answers, feedback_dict, all_patterns) {
     let fetchError = null;
     let result = null;
 
     try {
-        const response = await fetch('https://wordle-5rl4.onrender.com/get_remaining_guesses', {
+        const response = await fetch('https://wordle-5rl4.onrender.com/get_entropies', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                guesses: previous_guesses,
-                feedback: feedback_list,
-                current_possible_answers: possible_answers,
-                feedback_cache: feedback_cache
+                possible_guesses: possible_guesses,
+                possible_answers: possible_answers,
+                feedback_dict: feedback_dict,
+                all_patterns: all_patterns
             })
         });
 
@@ -189,7 +211,8 @@ window.onload = async function () {
 
 // MAIN GAME LOOP LOGIC
 // listens for key presses and responds accordingly-- aka the main game function loop
-let valid_remaining_guesses = valid_guesses
+let valid_remaining_guesses = secret_words
+let all_patterns = get_all_patterns()
 let guesses = []
 let feedbacks = []
 let bits = []
@@ -244,6 +267,14 @@ document.addEventListener('keydown', async function (event) {
             tile.textContent = valid_remaining_guesses.length + " pos, " + bits_remaining + " bits";
 
             tile = document.getElementById('row-${currentRow}-actual-bits');
+
+            // re rank guesses 
+            let guesses_ranked = rank_guesses(secret_words, valid_remaining_guesses, feedback_cache, all_patterns)
+
+            for (let i = 0; i < 6; i++) {
+                tile = document.getElementById(`row-${currentRow}-top-picks`);
+                tile.textContent = guesses_ranked[i]
+            }
         }
     }
     else if (key === 'Backspace') {
