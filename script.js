@@ -179,7 +179,6 @@ async function rank_guesses(possible_guesses, possible_answers, feedback_dict, a
             body: JSON.stringify({
                 possible_guesses: possible_guesses,
                 possible_answers: possible_answers,
-                feedback_dict: feedback_dict,
                 all_patterns: all_patterns
             })
         });
@@ -263,9 +262,8 @@ document.addEventListener('keydown', async function (event) {
             valid_remaining_guesses = get_valid_remaining_guesses(previous_guesses, feedback_list, valid_remaining_guesses, feedback_cache);
 
             let bits_remaining = Math.log2(valid_remaining_guesses.length)
-            bits_remaining = Math.trunc(bits_remaining * 100) / 100
             bits.push(bits_remaining)
-            tile.textContent = valid_remaining_guesses.length + " pos, " + bits_remaining + " bits";
+            tile.textContent = valid_remaining_guesses.length + " possibilities, " + bits_remaining + " bits remaining";
 
             tile = document.getElementById(`row-${currentRow}-actual-bits`);
 
