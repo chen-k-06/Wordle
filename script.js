@@ -223,80 +223,78 @@ document.addEventListener('keydown', async function (event) {
     let key = event.key;
 
     if (key === 'Enter') {
-        if (gameOver == false) {
-            if (currentGuess != null && currentGuess.length === MAX_WORD_LENGTH && secret_words.includes(currentGuess)) {
-                console.log('Submitting guess:', currentGuess);
-                let feedback = get_feedback(currentGuess, secretWord);
-                console.log('Feedback:', feedback);
-                feedbacks.push(feedback)
-                guesses.push(currentGuess)
+        if (currentGuess != null && currentGuess.length === MAX_WORD_LENGTH && secret_words.includes(currentGuess)) {
+            console.log('Submitting guess:', currentGuess);
+            let feedback = get_feedback(currentGuess, secretWord);
+            console.log('Feedback:', feedback);
+            feedbacks.push(feedback)
+            guesses.push(currentGuess)
 
-                // debugging
-                let previous_guesses = guesses;
-                let feedback_list = feedbacks;
+            // debugging
+            let previous_guesses = guesses;
+            let feedback_list = feedbacks;
 
-                for (let i = 0; i < MAX_WORD_LENGTH; i++) {
-                    let tile = document.getElementById(`row-${currentRow}-col-${i}`);
-                    tile.classList.remove('filled');
+            for (let i = 0; i < MAX_WORD_LENGTH; i++) {
+                let tile = document.getElementById(`row-${currentRow}-col-${i}`);
+                tile.classList.remove('filled');
 
-                    if (feedback[i] === '0') {
-                        tile.classList.add('notIncluded');
-                    }
-                    else if (feedback[i] === '2') {
-                        tile.classList.add('correct');
-                    }
-                    else {
-                        tile.classList.add('included');
-                    }
+                if (feedback[i] === '0') {
+                    tile.classList.add('notIncluded');
                 }
-                if (feedback === "22222") { // checks for win
-                    endGame(true, secretWord);
-                    gameOver = true;
-                    return;
+                else if (feedback[i] === '2') {
+                    tile.classList.add('correct');
                 }
+                else {
+                    tile.classList.add('included');
+                }
+            }
+            if (feedback === "22222") { // checks for win
+                endGame(true, secretWord);
+                gameOver = true;
+                return;
+            }
 
-                currentRow++;
-                currentGuess = "";
+            currentRow++;
+            currentGuess = "";
 
-                // update posibilities / uncertainty box 
-                let tile = document.getElementById(`row-${currentRow}-pos-bits`);
+            // update posibilities / uncertainty box 
+            let tile = document.getElementById(`row-${currentRow}-pos-bits`);
 
-                valid_remaining_guesses = get_valid_remaining_guesses(previous_guesses, feedback_list, valid_remaining_guesses, feedback_cache);
+            valid_remaining_guesses = get_valid_remaining_guesses(previous_guesses, feedback_list, valid_remaining_guesses, feedback_cache);
 
-                let bits_remaining = Math.log2(valid_remaining_guesses.length)
-                bits_remaining = Math.trunc(bits_remaining * 100) / 100
-                bits.push(bits_remaining)
-                tile.textContent = valid_remaining_guesses.length + " pos, " + bits_remaining + " bits";
+            let bits_remaining = Math.log2(valid_remaining_guesses.length)
+            bits_remaining = Math.trunc(bits_remaining * 100) / 100
+            bits.push(bits_remaining)
+            tile.textContent = valid_remaining_guesses.length + " pos, " + bits_remaining + " bits";
 
-                tile = document.getElementById('row-${currentRow}-actual-bits');
+            tile = document.getElementById('row-${currentRow}-actual-bits');
 
-                // re rank guesses 
-                let guesses_ranked = rank_guesses(secret_words, valid_remaining_guesses, feedback_cache, all_patterns)
+            // re rank guesses 
+            let guesses_ranked = rank_guesses(secret_words, valid_remaining_guesses, feedback_cache, all_patterns)
 
-                for (let i = 0; i < 6; i++) {
-                    tile = document.getElementById(`row-${i}-top-picks`);
-                    if (tile && guesses_ranked[i]) {
-                        tile.textContent = guesses_ranked[i];
-                    }
+            for (let i = 0; i < 6; i++) {
+                tile = document.getElementById(`row-${i}-top-picks`);
+                if (tile && guesses_ranked[i]) {
+                    tile.textContent = guesses_ranked[i];
                 }
             }
         }
-        else if (key === 'Backspace' && currentGuess.length != 0) {
-            event.preventDefault(); // prevents the default action of going to the previous page (?)
-            updateTileBackspace(currentRow, currentGuess.length - 1, '');
-            currentGuess = currentGuess.slice(0, -1);
-            console.log('Deleted. Current guess:', currentGuess);
+    }
+    else if (key === 'Backspace' && currentGuess.length != 0) {
+        event.preventDefault(); // prevents the default action of going to the previous page (?)
+        updateTileBackspace(currentRow, currentGuess.length - 1, '');
+        currentGuess = currentGuess.slice(0, -1);
+        console.log('Deleted. Current guess:', currentGuess);
+    }
+    else if (/^[a-zA-Z]$/.test(key)) {
+        if (currentGuess.length < MAX_WORD_LENGTH) {
+            updateTileLetter(currentRow, currentGuess.length, key.toUpperCase());
+            currentGuess += key.toUpperCase();
+            console.log('Added letter:', key.toUpperCase(), 'Current guess:', currentGuess);
         }
-        else if (/^[a-zA-Z]$/.test(key)) {
-            if (currentGuess.length < MAX_WORD_LENGTH) {
-                updateTileLetter(currentRow, currentGuess.length, key.toUpperCase());
-                currentGuess += key.toUpperCase();
-                console.log('Added letter:', key.toUpperCase(), 'Current guess:', currentGuess);
-            }
-        }
-        if (currentRow === 7) {
-            endGame(false, secretWord);
-            gameOver = true;
-        }
+    }
+    if (currentRow === 7) {
+        endGame(false, secretWord);
+        gameOver = true;
     }
 })
