@@ -284,7 +284,9 @@ document.addEventListener('keydown', async function (event) {
             for (let i = 0; i < Math.min(6, entries.length); i++) {
                 const [guess, entropy] = entries[i];
                 tile = document.getElementById(`row-${i}-top-picks`);
-                tile.classList.remove("fly-out");
+                tile.classList.remove("fly-in", "fly-out");
+
+                void tile.offsetWidth; // force reflow 
                 tile.classList.add("fly-in");
                 tile.textContent = `${guess}, ${entropy.toFixed(2)} bits`;
             }
