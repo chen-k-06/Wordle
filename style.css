@@ -56,7 +56,8 @@ button:hover {
     font-size: 1rem;
     padding: 15px;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    ;
     display: flex;
     width: 173.5px;
 }
@@ -117,25 +118,25 @@ button:hover {
 
 @keyframes flyIn {
     0% {
-        transform: translateY(-50px);
-        opacity: 0;
+        transform: translateY(0px);
+        opacity: 1;
     }
 
     100% {
-        transform: translateY(0px);
-        opacity: 1;
+        transform: translateY(-50px);
+        opacity: 0;
     }
 }
 
 @keyframes flyOut {
     0% {
-        transform: translateY(0px);
-        opacity: 1;
+        transform: translateY(-50px);
+        opacity: 0;
     }
 
     100% {
-        transform: translateY(-50px);
-        opacity: 0;
+        transform: translateY(0px);
+        opacity: 1;
     }
 }
 
