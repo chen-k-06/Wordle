@@ -264,7 +264,7 @@ document.addEventListener('keydown', async function (event) {
 
             // update actual bits tile
             tile = document.getElementById(`row-${currentRow - 1}-actual-bits`);
-            tile.textContent = (Math.trunc(bits[guesses.length - 1] * 100) / 100) - (Math.trunc(bits_remaining * 100) / 100) + " bits";
+            tile.textContent = (Math.trunc((bits[guesses.length - 1] - bits_remaining) * 100) / 100) + " bits";
 
             // re rank guesses 
             console.log("Sending to API: secret words:", secret_words, " valid remaining guesses: ", valid_remaining_guesses)
