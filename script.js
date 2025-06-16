@@ -268,6 +268,7 @@ document.addEventListener('keydown', async function (event) {
             tile.textContent = Math.trunc(bits[guesses.length - 1] * 100) / 100 - bits_remaining + " bits";
 
             // re rank guesses 
+            console.log("Sending to API: secret words:", secret_words, " valid remaining guesses: ", valid_remaining_guesses)
             let guesses_ranked = await rank_guesses(secret_words, valid_remaining_guesses);
             let entries = Object.entries(guesses_ranked);
             console.log('Top guesses:', guesses_ranked);
