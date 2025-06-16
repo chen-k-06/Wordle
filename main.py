@@ -27,14 +27,20 @@ def read_root():
 # Get feedback dict cache functions
 #------------------------------------------------
 def get_feedback_dict(valid_guesses):
-    if os.path.exists("pattern_cache.pkl"):
-        with open("pattern_cache.pkl", "rb") as file:
-            feedback_dict = pickle.load(file)
+    feedback_dict = None
 
-    else: 
+    if os.path.exists("pattern_cache.pkl"):
+        try:
+            with open("pattern_cache.pkl", "rb") as file:
+                feedback_dict = pickle.load(file)
+        except Exception as e:
+            print("Error loading pattern_cache.pkl:", e)
+    
+    if feedback_dict is None:
         feedback_dict = generate_feedback_dict(valid_guesses)
         with open("pattern_cache.pkl", "wb") as file:
             pickle.dump(feedback_dict, file)
+
     return feedback_dict
 
 def generate_feedback_dict(guesses):
@@ -76,6 +82,9 @@ def calculate_entropies(possible_guesses: list[str], possible_answers: list[str]
     if len(possible_answers) <= 2:
         return {answer: 100 for answer in possible_answers}
     
+    if feedback_dict is None:
+        raise ValueError("feedback_dict is None. Cache may be corrupted or not built correctly.")
+
     for guess in possible_guesses: # ~2,500 words at most
         counts = []
         for pattern in all_patterns: # 243 patterns
