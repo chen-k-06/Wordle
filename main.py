@@ -46,7 +46,7 @@ def calculate_entropies(possible_guesses: list[str], possible_answers: list[str]
         for pattern in all_patterns: # 243 patterns
             if not feedback_dict[guess].get(pattern):
                 continue
-            answers = feedback_dict[guess][pattern].intersection(possible_answers)
+            answers = (set(feedback_dict[guess][pattern])).intersection(possible_answers)
             counts.append(len(answers))
         total = sum(counts)
         if total > 0: 
