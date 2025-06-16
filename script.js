@@ -275,9 +275,7 @@ document.addEventListener('keydown', async function (event) {
 
             for (let i = 0; i < 6; i++) {
                 tile = document.getElementById(`row-${i}-top-picks`);
-                if (tile && guesses_ranked[i]) {
-                    tile.textContent = guesses_ranked[i];
-                }
+                tile.textContent = guesses_ranked[i];
             }
         }
     }
