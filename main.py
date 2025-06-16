@@ -25,7 +25,7 @@ def read_root():
 #------------------------------------------------
 # Get feedback dict cache functions
 #------------------------------------------------
-def get_feedback_dict(valid_guesses):
+def get_feedback_dict():
     feedback_dict = None
 
     if os.path.exists("pattern_cache.pkl"):
@@ -36,35 +36,11 @@ def get_feedback_dict(valid_guesses):
             print("Error loading pattern_cache.pkl:", e)
     
     if feedback_dict is None:
-        feedback_dict = generate_feedback_dict(valid_guesses)
-        with open("pattern_cache.pkl", "wb") as file:
-            pickle.dump(feedback_dict, file)
+        print("Feedback pickle not included")
 
     return feedback_dict
 
-def generate_feedback_dict(guesses):
-    '''For each possible guess and possible information returned, store a list of candidate words
-    
-    >>> feedback_dict = generate_feedback_dict(['weary', 'bears, 'crane'])
-    >>> feedback_dict['crane'][(2, 2, 2, 2, 2)]
-    {'crane'}
-    >>> sorted(pattern_dict['crane'][(0, 1, 2, 0, 1)])
-    ['bears', 'weary']
-    '''
-    feedback_dict = {}
-    for guess in guesses:
-        feedback_dict[guess] = {}
-        for answer in guesses:
-            pattern = get_pattern(guess, answer)
-            if pattern not in feedback_dict[guess]:
-                feedback_dict[guess][pattern] = set()
-            feedback_dict[guess][pattern].add(answer)
-    return feedback_dict
-
-# -----------------------------------------------
-# Calculate entropies / rank guesses functions
-# -----------------------------------------------
-def calculate_entropies(possible_guesses: list[str], possible_answers: list[str]) -> Dict[str, float]:
+def calculate_entropies(possible_guesses: list[str], possible_answers: list[str], feedback_dict: Dict[str, Dict[str, List[str]]], all_patterns: list[str]) -> Dict[str, float]:
     '''
     Calculates the entropy for every guess in possible guesses, taking into account 
     the remaining possible answers. 
@@ -76,16 +52,13 @@ def calculate_entropies(possible_guesses: list[str], possible_answers: list[str]
             entropies (list): a list of entropies that correspond to each guess in possible_guesses
     '''
     entropies = {}
-    feedback_dict = get_feedback_dict(possible_guesses)
+    feedback_dict = get_feedback_dict()
     all_patterns = get_all_patterns()
     possible_answers = set(possible_answers)
     if len(possible_answers) <= 2:
         return {answer: 100 for answer in possible_answers}
     
-    if feedback_dict is None:
-        raise ValueError("feedback_dict is None. Cache may be corrupted or not built correctly.")
-
-    for guess in possible_guesses: # ~2,500 words at most
+    for guess in possible_guesses: # ~2,500 words
         counts = []
         for pattern in all_patterns: # 243 patterns
             if ((guess not in feedback_dict) or (pattern not in feedback_dict[guess])):
@@ -105,13 +78,8 @@ class GetEntropies(BaseModel):
     possible_guesses: list[str]
     possible_answers: list[str]
 
+
 @app.post("/get_entropies")
 def get_entropies(request: GetEntropies) -> dict: 
-    global feedback_dict
-    feedback_dict = None
-
-    if feedback_dict is None:
-        feedback_dict = get_feedback_dict(request.possible_guesses)
-
-    result = calculate_entropies(request.possible_guesses, request.possible_answers)
+    result = calculate_entropies(request.possible_guesses, request.possible_answers, request.feedback_dict, request.all_patterns)
     return result
