@@ -1,5 +1,5 @@
 body {
-    font-family: 'Clear Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: rgb(29, 29, 27);
     text-align: center;
     color: white;
@@ -118,25 +118,25 @@ button:hover {
 
 @keyframes flyIn {
     0% {
-        transform: translateY(0px);
-        opacity: 1;
+        transform: translateY(50px);
+        opacity: 0;
     }
 
     100% {
-        transform: translateY(-50px);
-        opacity: 0;
+        transform: translateY(0px);
+        opacity: 1;
     }
 }
 
 @keyframes flyOut {
     0% {
-        transform: translateY(-50px);
-        opacity: 0;
+        transform: translateY(0px);
+        opacity: 1;
     }
 
     100% {
-        transform: translateY(0px);
-        opacity: 1;
+        transform: translateY(50px);
+        opacity: 0;
     }
 }
 
