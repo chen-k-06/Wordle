@@ -35,6 +35,7 @@ def get_feedback_dict(valid_guesses):
         feedback_dict = generate_feedback_dict(valid_guesses)
         with open("pattern_cache.pkl", "wb") as file:
             pickle.dump(feedback_dict, file)
+    return feedback_dict
 
 def generate_feedback_dict(guesses):
     '''For each possible guess and possible information returned, store a list of candidate words
