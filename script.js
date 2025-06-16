@@ -270,7 +270,8 @@ document.addEventListener('keydown', async function (event) {
             tile = document.getElementById(`row-${currentRow}-actual-bits`);
 
             // re rank guesses 
-            let guesses_ranked = rank_guesses(secret_words, valid_remaining_guesses, feedback_cache, all_patterns)
+            let guesses_ranked = await rank_guesses(secret_words, valid_remaining_guesses, feedback_cache, all_patterns)
+            console.log('Top guesses:', guesses_ranked);
 
             for (let i = 0; i < 6; i++) {
                 tile = document.getElementById(`row-${i}-top-picks`);
