@@ -266,7 +266,9 @@ document.addEventListener('keydown', async function (event) {
             bits.push(bits_remaining)
             tile.textContent = valid_remaining_guesses.length + " possibilities, " + bits_remaining + " bits";
 
+            // update actual bits tile
             tile = document.getElementById(`row-${currentRow}-actual-bits`);
+            tile.textContent = bits[guesses.length - 1] - bits_remaining + " bits"
 
             // re rank guesses 
             let guesses_ranked = await rank_guesses(secret_words, valid_remaining_guesses, all_patterns);
@@ -283,7 +285,7 @@ document.addEventListener('keydown', async function (event) {
             for (let i = 0; i < Math.min(6, entries.length); i++) {
                 const [guess, entropy] = entries[i];
                 tile = document.getElementById(`row-${i}-top-picks`);
-                tile.textContent = `${guess}, ${entropy.toFixed(2)}`;
+                tile.textContent = `${guess}, ${entropy.toFixed(2)} bits`;
             }
         }
     }
