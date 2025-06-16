@@ -1,10 +1,9 @@
 # api code 
 from fastapi import FastAPI
 from pydantic import BaseModel
-import math
-from collections import Counter
 from scipy.stats import entropy
-from typing import Dict, List
+from typing import Dict
+import os
 import pickle
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -22,10 +21,42 @@ app.add_middleware(
 def read_root():
     return {"Hello": "World"}
 
+#------------------------------------------------
+# Get feedback dict cache functions
+#------------------------------------------------
+def get_feedback_dict(valid_guesses):
+    if os.path.exists("pattern_cache.pkl"):
+        with open("pattern_cache.pkl", "rb") as file:
+            feedback_dict = pickle.load(file)
+
+    else: 
+        feedback_dict = generate_feedback_dict(valid_guesses)
+        with open("pattern_cache.pkl", "wb") as file:
+            pickle.dump(feedback_dict, file)
+
+def generate_feedback_dict(guesses):
+    '''For each possible guess and possible information returned, store a list of candidate words
+    
+    >>> feedback_dict = generate_feedback_dict(['weary', 'bears, 'crane'])
+    >>> feedback_dict['crane'][(2, 2, 2, 2, 2)]
+    {'crane'}
+    >>> sorted(pattern_dict['crane'][(0, 1, 2, 0, 1)])
+    ['bears', 'weary']
+    '''
+    feedback_dict = {}
+    for guess in guesses:
+        feedback_dict[guess] = {}
+        for answer in guesses:
+            pattern = get_pattern(guess, answer)
+            if pattern not in feedback_dict[guess]:
+                feedback_dict[guess][pattern] = set()
+            feedback_dict[guess][pattern].add(answer)
+    return feedback_dict
+
 # -----------------------------------------------
 # Calculate entropies / rank guesses functions
 # -----------------------------------------------
-def calculate_entropies(possible_guesses: list[str], possible_answers: list[str], feedback_dict: Dict[str, Dict[str, List[str]]], all_patterns: list[str]) -> Dict[str, float]:
+def calculate_entropies(possible_guesses: list[str], possible_answers: list[str], all_patterns: list[str]) -> Dict[str, float]:
     '''
     Calculates the entropy for every guess in possible guesses, taking into account 
     the remaining possible answers. 
@@ -37,6 +68,7 @@ def calculate_entropies(possible_guesses: list[str], possible_answers: list[str]
             entropies (list): a list of entropies that correspond to each guess in possible_guesses
     '''
     entropies = {}
+    feedback_dict = generate_feedback_dict(possible_guesses)
     possible_answers = set(possible_answers)
     if len(possible_answers) <= 2:
         return {answer: 100 for answer in possible_answers}
@@ -60,10 +92,9 @@ def calculate_entropies(possible_guesses: list[str], possible_answers: list[str]
 class GetEntropies(BaseModel):
     possible_guesses: list[str]
     possible_answers: list[str]
-    feedback_dict: Dict[str, Dict[str, List[str]]]
     all_patterns: list[str]
 
 @app.post("/get_entropies")
 def get_entropies(request: GetEntropies) -> dict: 
-    result = calculate_entropies(request.possible_guesses, request.possible_answers, request.feedback_dict, request.all_patterns)
+    result = calculate_entropies(request.possible_guesses, request.possible_answers, request.all_patterns)
     return result
