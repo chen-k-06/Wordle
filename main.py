@@ -6,6 +6,7 @@ from typing import Dict
 import os
 import pickle
 from fastapi.middleware.cors import CORSMiddleware
+from wordle_helper_functions import get_pattern
 
 app = FastAPI()
 
