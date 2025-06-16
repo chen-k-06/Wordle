@@ -166,7 +166,7 @@ function get_valid_remaining_guesses(previous_guesses, feedback_list, possible_a
 }
 
 // API functions 
-async function rank_guesses(possible_guesses, possible_answers, feedback_dict, all_patterns) {
+async function rank_guesses(possible_guesses, possible_answers, all_patterns) {
     let fetchError = null;
     let result = null;
 
@@ -262,8 +262,9 @@ document.addEventListener('keydown', async function (event) {
             valid_remaining_guesses = get_valid_remaining_guesses(previous_guesses, feedback_list, valid_remaining_guesses, feedback_cache);
 
             let bits_remaining = Math.log2(valid_remaining_guesses.length)
+            bits_remaining = Math.trunc(bits_remaining * 100) / 100
             bits.push(bits_remaining)
-            tile.textContent = valid_remaining_guesses.length + " possibilities, " + bits_remaining + " bits remaining";
+            tile.textContent = valid_remaining_guesses.length + " possibilities, " + bits_remaining + " bits";
 
             tile = document.getElementById(`row-${currentRow}-actual-bits`);
 
@@ -283,8 +284,6 @@ document.addEventListener('keydown', async function (event) {
                 const [guess, entropy] = entries[i];
                 tile = document.getElementById(`row-${i}-top-picks`);
                 tile.textContent = `${guess}, ${entropy.toFixed(2)}`;
-
-                i++;
             }
         }
     }
