@@ -117,29 +117,8 @@ async function loadFeedbackCache() {
     }
 }
 
-function get_all_patterns() {
-    /*
-    Returns all possible feedback patterns-- aka all orderings of 0, 1, and 2 
-    that are 5 digits long, with replacement
-    */
-    const digits = ['0', '1', '2']
-    const patterns = []
-
-    for (let a of digits) {
-        for (let b of digits) {
-            for (let c of digits) {
-                for (let d of digits) {
-                    for (let e of digits) {
-                        patterns.push(a + b + c + d + e)
-                    }
-                }
-            }
-        }
-    }
-    return patterns
-}
-
-function get_valid_remaining_guesses(previous_guesses, feedback_list, possible_answers, feedback_cache) {
+// API functions 
+async function get_valid_remaining_guesses(guesses, feedback, current_possible_answers) {
     /*Reduces the list of possible answers based on the most recent feedback. Returns a new list of 
        possible answers that is a subset of current_possible_answers
         
@@ -152,20 +131,31 @@ function get_valid_remaining_guesses(previous_guesses, feedback_list, possible_a
         Returns:
          possible_answers (list): a list of remaining possible words that could be the secret word
     */
-    if (previous_guesses.length === 0 || previous_guesses[0] === "") {
-        return possible_answers
+    let fetchError = null;
+    let result = null;
+
+    try {
+        const response = await fetch('https://wordle-5rl4.onrender.com/get_remaining_guesses', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                guesses: guesses,
+                feedback: feedback,
+                current_possible_answers: current_possible_answers
+            })
+        });
+
+        result = await response.json();
+        console.log('Response:', result);
+    } catch (error) {
+        fetchError = error;
+        console.error('Fetch error:', fetchError);
     }
-
-    const last_guess = previous_guesses[feedback_list.length - 1]
-    const last_feedback = feedback_list[feedback_list.length - 1]
-
-    const matching_words = new Set(feedback_cache[last_guess][last_feedback])
-    let new_possible_answers = possible_answers.filter(word => matching_words.has(word));
-
-    return new_possible_answers
+    return result
 }
 
-// API functions 
 async function rank_guesses(possible_guesses, possible_answers) {
     let fetchError = null;
     let result = null;

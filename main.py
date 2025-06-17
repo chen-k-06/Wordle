@@ -40,6 +40,49 @@ def get_feedback_dict():
 
     return feedback_dict
 
+#------------------------------------------------
+# Reduce guess list functions
+#------------------------------------------------
+def get_remaining_guesses(guesses: list[str], feedback: list[str], current_possible_answers: list[str]):
+    '''Reduces the list of possible answers based on the most recent feedback. Returns a new list of 
+       possible answers that is a subset of current_possible_answers
+        
+        Args:
+         guesses (list): A list of string guesses, which could be empty
+         feedback (list): A list of feedback strings, which could be empty
+         current_possible_answers (list): a list of possible words that could be the secret word, 
+            not yet updated based on most recent feedback. Cannot be empty.
+
+        Returns:
+         possible_answers (list): a list of remaining possible words that could be the secret word
+    '''
+    if (guesses[0] == ""):  # current guess is the first guess -> valid guesses is the list of all valid guesses
+        return current_possible_answers
+    
+    feedback_dict = get_feedback_dict()
+    possible_answers = set()
+    current_possible_answers = set(current_possible_answers)
+    last_guess = guesses[len(feedback) - 1]
+    last_feedback = feedback[len(feedback) - 1]
+
+    words = feedback_dict[last_guess][last_feedback]
+    possible_answers = current_possible_answers.intersection(words)
+
+    return list(possible_answers)
+
+class GetRemainingGuesses(BaseModel):
+    guesses: list[str]
+    feedback: list[str]
+    current_possible_answers: list[str]
+
+@app.post("/get_remaining_guesses")
+def get_entropies(request: GetRemainingGuesses) -> dict: 
+    result = calculate_entropies(request.guesses, request.feedback, request.current_possible_answers)
+    return result
+
+#------------------------------------------------
+# Entropy functions
+#------------------------------------------------
 def calculate_entropies(possible_guesses: list[str], possible_answers: list[str]) -> Dict[str, float]:
     '''
     Calculates the entropy for every guess in possible guesses, taking into account 
