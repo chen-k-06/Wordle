@@ -321,7 +321,7 @@ document.getElementById("help-button").addEventListener("click", () => {
     \n
     After you enter your answer, the amount of actual bits of information gained from that guess will \n
     appear in red on the right. The number of bits remaining in the word list, along with how many words \n
-    are still eligble to be the secret word, will appear on the left.`.trim();
+    are still eligble to be the secret word, will appear on the left.`
     help_popup.classList.remove("hidden");
 });
 
