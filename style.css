@@ -124,7 +124,7 @@ button:hover {
 
 /* help popup */
 
-.help-button {
+#help-button {
     top: 10px;
     left: 10px;
     padding: 10px;

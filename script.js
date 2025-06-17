@@ -327,6 +327,7 @@ document.getElementById("help-button").addEventListener("click", () => {
 
 // close the help popup
 document.getElementById("help-close").addEventListener("click", () => {
+    const help_popup = document.getElementById("help-popup");
     help_popup.classList.add("hidden");
 });
 
