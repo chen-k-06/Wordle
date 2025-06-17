@@ -232,7 +232,6 @@ document.addEventListener('keydown', async function (event) {
 
             for (let i = 0; i < MAX_WORD_LENGTH; i++) {
                 let tile = document.getElementById(`row-${currentRow}-col-${i}`);
-                tile.classList.remove('filled');
                 tile.classList.add('flip-in');
 
                 if (feedback[i] === '0') {
@@ -244,6 +243,7 @@ document.addEventListener('keydown', async function (event) {
                 else {
                     tile.classList.add('included');
                 }
+                tile.classList.remove('filled');
                 tile.classList.remove('flip-in');
                 tile.classList.add('flip-out');
             }
