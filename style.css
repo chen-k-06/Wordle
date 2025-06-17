@@ -150,7 +150,7 @@ button:hover {
     z-index: 1000;
 }
 
-.popup-content {
+#help-popup-content {
     background-color: rgba(0, 0, 0, 0.7);
     padding: 2em;
     border-radius: 10px;
