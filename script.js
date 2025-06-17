@@ -233,23 +233,19 @@ document.addEventListener('keydown', async function (event) {
             for (let i = 0; i < MAX_WORD_LENGTH; i++) {
                 let tile = document.getElementById(`row-${currentRow}-col-${i}`);
                 tile.classList.remove('filled');
-                tile.classList.add('revealed');
+                tile.classList.add('flip-in');
 
                 if (feedback[i] === '0') {
-                    setTimeout(() => {
-                        tile.classList.add('notIncluded');
-                    }, 500);
+                    tile.classList.add('notIncluded');
                 }
                 else if (feedback[i] === '2') {
-                    setTimeout(() => {
-                        tile.classList.add('correct');
-                    }, 500);
+                    tile.classList.add('correct');
                 }
                 else {
-                    setTimeout(() => {
-                        tile.classList.add('included');
-                    }, 500);
+                    tile.classList.add('included');
                 }
+                tile.classList.remove('flip-in');
+                tile.classList.add('flip-out');
             }
             if (feedback === "22222") { // checks for win
                 endGame(true, secretWord);
