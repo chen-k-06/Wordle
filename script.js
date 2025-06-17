@@ -106,36 +106,6 @@ function updateTileBackspace(row, column, letter) {
     tile.classList.remove('filled');
 }
 
-const help_button = document.getElementById('help-button');
-const closeBtn = document.getElementById('help-close');
-
-// help button event listener 
-help_button.addEventListener('click', (event) => {
-    console.log('Help button was clicked!');
-    const help_popup = document.getElementById("help-popup");
-    const message = document.getElementById("help-popup-content");
-    message.textContent = `Wordle is a web-based word game developed by Josh Wardle. 
-    Players have six attempts to guess a five-letter secret word, with feedback given for each guess.
-    
-    A green tile signifies that that letter exists, in that position, in the secret word.
-    A yellow tile means that letter is in the secret word, but not in that spot.
-    And a grey tile means that letter isnt in the secret word at all.
-    
-    Also shown are optimal possible guesses and how many bits of information they provide. 
-    Here, we define a bit of information to = -log2(p), where p is the probabilty of an event. 
-    Therefore, the more information-- bits-- a guess is estimated to provide, the better a guess it is.
-    
-    After you enter your answer, the amount of actual bits of information gained from that guess will 
-    appear in red on the right. The number of bits remaining in the word list, along with how many words 
-    are still eligble to be the secret word, will appear on the left.`.trim();
-    help_popup.classList.remove("hidden");
-});
-
-// close the help popup
-closeBtn.addEventListener('click', () => {
-    help_popup.classList.add("hidden");
-});
-
 // API functions 
 async function get_valid_remaining_guesses(guesses, feedback, current_possible_answers) {
     /*Reduces the list of possible answers based on the most recent feedback. Returns a new list of 
@@ -332,6 +302,33 @@ document.addEventListener('keydown', async function (event) {
         return;
     }
 })
+
+// help button event listener 
+document.getElementById("'help-button").addEventListener("click", () => {
+    console.log('Help button was clicked!');
+    const help_popup = document.getElementById("help-popup");
+    const message = document.getElementById("help-popup-content");
+    message.textContent = `Wordle is a web-based word game developed by Josh Wardle. 
+    Players have six attempts to guess a five-letter secret word, with feedback given for each guess.
+    
+    A green tile signifies that that letter exists, in that position, in the secret word.
+    A yellow tile means that letter is in the secret word, but not in that spot.
+    And a grey tile means that letter isnt in the secret word at all.
+    
+    Also shown are optimal possible guesses and how many bits of information they provide. 
+    Here, we define a bit of information to = -log2(p), where p is the probabilty of an event. 
+    Therefore, the more information-- bits-- a guess is estimated to provide, the better a guess it is.
+    
+    After you enter your answer, the amount of actual bits of information gained from that guess will 
+    appear in red on the right. The number of bits remaining in the word list, along with how many words 
+    are still eligble to be the secret word, will appear on the left.`.trim();
+    help_popup.classList.remove("hidden");
+});
+
+// close the help popup
+document.getElementById("help-close").addEventListener("click", () => {
+    help_popup.classList.add("hidden");
+});
 
 document.getElementById("restart-button").addEventListener("click", () => {
     location.reload();
