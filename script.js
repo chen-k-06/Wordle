@@ -86,7 +86,6 @@ let secretWord = get_secret_word();
 
 // gets the list of all valid guesses (much longer than the list of secret words)
 import { get_valid_guesses } from './valid_wordle_guesses.js';
-let valid_guesses = get_valid_guesses();
 
 // updates the tile to be the correct letter
 function updateTileLetter(row, column, letter) {
@@ -100,21 +99,6 @@ function updateTileBackspace(row, column, letter) {
     let tile = document.getElementById(`row-${row}-col-${column}`);
     tile.textContent = letter
     tile.classList.remove('filled');
-}
-
-// to load the feedback dict
-async function loadFeedbackCache() {
-    try {
-        const res = await fetch('feedback_dict.json');
-        if (!res.ok) throw new Error(res.statusText);
-
-        const text = await res.text();
-        const loadFeedbackCache = JSON.parse(text);
-
-        return loadFeedbackCache;
-    } catch (err) {
-        console.error("Failed to load/parse text file:", err);
-    }
 }
 
 // API functions 
@@ -185,14 +169,10 @@ async function rank_guesses(possible_guesses, possible_answers) {
     return result
 }
 
-let feedback_cache = new Map()
 window.onload = async function () {
     try {
         const pingResponse = await fetch('https://wordle-5rl4.onrender.com/');
         console.log("Pinged server:", pingResponse.status);
-
-        feedback_cache = await loadFeedbackCache();
-        console.log("Loaded feedback dict!")
 
     } catch (error) {
         console.error("Error waking up server or fetching data:", error);
