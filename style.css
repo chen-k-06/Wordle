@@ -143,11 +143,13 @@ button:hover {
     left: 0;
     width: 75%;
     height: 75%;
+    max-height: 80vh;
     background-color: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    overflow-y: auto;
 }
 
 #help-popup-content {
@@ -159,6 +161,7 @@ button:hover {
     color: whitesmoke;
     width: 70%;
     height: 70%;
+    font-size: small;
 }
 
 /* tile coloring */
