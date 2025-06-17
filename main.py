@@ -76,8 +76,8 @@ class GetRemainingGuesses(BaseModel):
     current_possible_answers: list[str]
 
 @app.post("/get_remaining_guesses")
-def get_entropies(request: GetRemainingGuesses) -> dict: 
-    result = calculate_entropies(request.guesses, request.feedback, request.current_possible_answers)
+def get_remaining_guesses(request: GetRemainingGuesses) -> list[str]: 
+    result = get_remaining_guesses(request.guesses, request.feedback, request.current_possible_answers)
     return result
 
 #------------------------------------------------
