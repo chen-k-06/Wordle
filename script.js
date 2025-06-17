@@ -15,12 +15,19 @@ function get_secret_word() {
 
 // displays end of game documentation
 function endGame(won) {
+    const popup = document.getElementById("endgame-popup");
+    const message = document.getElementById("endgame-message");
+
     if (!won) {
         console.log("Game over. The correct answer was ", secretWord);
+        message.textContent = 'Game over. The correct answer was "${secretWord}"'
     }
     else {
         console.log("You won!");
+        message.textContent = 'You won!'
     }
+
+    popup.classList.remove("hidden");
 }
 
 function get_feedback(guess, secret_word) {
@@ -297,3 +304,7 @@ document.addEventListener('keydown', async function (event) {
         return;
     }
 })
+
+document.getElementById("restart-button").addEventListener("click", () => {
+    location.reload();
+});
