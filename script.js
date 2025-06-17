@@ -315,12 +315,12 @@ document.getElementById("help-button").addEventListener("click", () => {
     A yellow tile means that letter is in the secret word, but not in that spot.<br>
     And a grey tile means that letter isnt in the secret word at all.<br>
     <br>
-    Also shown are optimal possible guesses and how many bits of information they provide. <br>
-    Here, we define a bit of information to = -log2(p), where p is the probabilty of an event. <br>
-    Therefore, the more information-- bits-- a guess is estimated to provide, the better a guess it is.<br>
+    Shown on the left are optimal possible guesses and how many bits of information they provide. <br>
+    Information theory defines a bit of information to = -log2(p), where p is the probabilty of an event occuring. <br>
+    Therefore, the more information (bits) a guess is estimated to provide, the "better" a guess it is.<br>
     <br>
-    After you enter your answer, the amount of actual bits of information gained from that guess will <br>
-    appear in red on the right. The number of bits remaining in the word list, along with how many words <br>
+    After you enter your answer, the amount of actual bits of information gained from that guess will appear in red on the right. <br>
+    The number of bits remaining in the word list, along with how many words
     are still eligble to be the secret word, will appear on the left.`
     help_popup.classList.remove("hidden");
 });
