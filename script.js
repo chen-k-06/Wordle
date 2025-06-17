@@ -106,6 +106,36 @@ function updateTileBackspace(row, column, letter) {
     tile.classList.remove('filled');
 }
 
+const help_button = document.getElementById('help-button');
+const closeBtn = document.getElementById('help-close');
+
+// help button event listener 
+help_button.addEventListener('click', (event) => {
+    console.log('Help button was clicked!');
+    const help_popup = document.getElementById("help-popup");
+    const message = document.getElementById("help-popup-content");
+    message.textContent = `Wordle is a web-based word game developed by Josh Wardle. 
+    Players have six attempts to guess a five-letter secret word, with feedback given for each guess.
+    
+    A green tile signifies that that letter exists, in that position, in the secret word.
+    A yellow tile means that letter is in the secret word, but not in that spot.
+    And a grey tile means that letter isnt in the secret word at all.
+    
+    Also shown are optimal possible guesses and how many bits of information they provide. 
+    Here, we define a bit of information to = -log2(p), where p is the probabilty of an event. 
+    Therefore, the more information-- bits-- a guess is estimated to provide, the better a guess it is.
+    
+    After you enter your answer, the amount of actual bits of information gained from that guess will 
+    appear in red on the right. The number of bits remaining in the word list, along with how many words 
+    are still eligble to be the secret word, will appear on the left.`.trim();
+    help_popup.classList.remove("hidden");
+});
+
+// close the help popup
+closeBtn.addEventListener('click', () => {
+    help_popup.classList.add("hidden");
+});
+
 // API functions 
 async function get_valid_remaining_guesses(guesses, feedback, current_possible_answers) {
     /*Reduces the list of possible answers based on the most recent feedback. Returns a new list of 
@@ -184,159 +214,125 @@ window.onload = async function () {
         setTimeout(() => location.reload(), 5000);
     }
     console.log('Page is fully loaded');
-    const help_button = document.getElementById('help-button');
-    const closeBtn = document.getElementById('help-close');
-    const help_popup = document.getElementById('help-popup');
-    const help_popup_content = document.getElementById('help-popup-content');
+};
 
-    // help button set up 
-    if (help_button && closeBtn && help_popup && help_popup_content) {
+// MAIN GAME LOOP LOGIC
+// listens for key presses and responds accordingly-- aka the main game function loop
+let valid_remaining_guesses = secret_words
+let guesses = []
+let feedbacks = []
+let bits = []
+bits.push(13.66)
+let isWaiting = false; // flag to prevent 'enter' before rank_guesses() returns
 
-        // help button event listener 
-        help_button.addEventListener('click', (event) => {
-            console.log('Help button was clicked!');
-            const popup = document.getElementById("help-popup");
-            const message = document.getElementById("help-popup-content");
-            message.textContent = `Wordle is a web-based word game developed by Josh Wardle. 
-    Players have six attempts to guess a five-letter secret word, with feedback given for each guess.
-    
-    A green tile signifies that that letter exists, in that position, in the secret word.
-    A yellow tile means that letter is in the secret word, but not in that spot.
-    And a grey tile means that letter isnt in the secret word at all.
-    
-    Also shown are optimal possible guesses and how many bits of information they provide. 
-    Here, we define a bit of information to = -log2(p), where p is the probabilty of an event. 
-    Therefore, the more information-- bits-- a guess is estimated to provide, the better a guess it is.
-    
-    After you enter your answer, the amount of actual bits of information gained from that guess will 
-    appear in red on the right. The number of bits remaining in the word list, along with how many words 
-    are still eligble to be the secret word, will appear on the left.`.trim();
-            popup.classList.remove("hidden");
-        });
+document.addEventListener('keydown', async function (event) {
+    let key = event.key;
 
-        // close the help popup
-        closeBtn.addEventListener('click', () => {
-            popup.classList.add("hidden");
-        });
-    };
+    if (key === 'Enter') {
+        if (isWaiting == false && currentGuess != null && currentGuess.length === MAX_WORD_LENGTH && secret_words.includes(currentGuess)) {
+            console.log('Submitting guess:', currentGuess);
+            let feedback = get_feedback(currentGuess, secretWord);
+            console.log('Feedback:', feedback);
+            feedbacks.push(feedback)
+            guesses.push(currentGuess)
 
-    // MAIN GAME LOOP LOGIC
-    // listens for key presses and responds accordingly-- aka the main game function loop
-    let valid_remaining_guesses = secret_words
-    let guesses = []
-    let feedbacks = []
-    let bits = []
-    bits.push(13.66)
-    let isWaiting = false; // flag to prevent 'enter' before rank_guesses() returns
+            // debugging
+            let previous_guesses = guesses;
+            let feedback_list = feedbacks;
 
-    document.addEventListener('keydown', async function (event) {
-        let key = event.key;
+            for (let i = 0; i < MAX_WORD_LENGTH; i++) {
+                let tile = document.getElementById(`row-${currentRow}-col-${i}`);
+                tile.classList.add('flip-in');
 
-        if (key === 'Enter') {
-            if (isWaiting == false && currentGuess != null && currentGuess.length === MAX_WORD_LENGTH && secret_words.includes(currentGuess)) {
-                console.log('Submitting guess:', currentGuess);
-                let feedback = get_feedback(currentGuess, secretWord);
-                console.log('Feedback:', feedback);
-                feedbacks.push(feedback)
-                guesses.push(currentGuess)
+                setTimeout(() => {
+                    tile.classList.remove('filled');
 
-                // debugging
-                let previous_guesses = guesses;
-                let feedback_list = feedbacks;
+                    if (feedback[i] === '0') {
+                        tile.classList.add('notIncluded');
+                    } else if (feedback[i] === '2') {
+                        tile.classList.add('correct');
+                    } else {
+                        tile.classList.add('included');
+                    }
+                }, 250);
+            }
+            if (feedback === "22222") { // checks for win
+                endGame(true, secretWord);
+                return;
+            }
 
-                for (let i = 0; i < MAX_WORD_LENGTH; i++) {
-                    let tile = document.getElementById(`row-${currentRow}-col-${i}`);
-                    tile.classList.add('flip-in');
+            currentRow++;
+            currentGuess = "";
 
-                    setTimeout(() => {
-                        tile.classList.remove('filled');
+            // update posibilities / uncertainty box 
+            let tile = document.getElementById(`row-${currentRow}-pos-bits`);
 
-                        if (feedback[i] === '0') {
-                            tile.classList.add('notIncluded');
-                        } else if (feedback[i] === '2') {
-                            tile.classList.add('correct');
-                        } else {
-                            tile.classList.add('included');
-                        }
-                    }, 250);
-                }
-                if (feedback === "22222") { // checks for win
-                    endGame(true, secretWord);
-                    return;
-                }
+            valid_remaining_guesses = await get_valid_remaining_guesses(previous_guesses, feedback_list, valid_remaining_guesses);
 
-                currentRow++;
-                currentGuess = "";
+            let bits_remaining = Math.log2(valid_remaining_guesses.length)
+            bits_remaining = Math.trunc(bits_remaining * 100) / 100
+            bits.push(bits_remaining)
+            tile.textContent = valid_remaining_guesses.length + " possibilities, " + bits_remaining + " bits";
 
-                // update posibilities / uncertainty box 
-                let tile = document.getElementById(`row-${currentRow}-pos-bits`);
+            // update actual bits tile
+            tile = document.getElementById(`row-${currentRow - 1}-actual-bits`);
+            tile.textContent = (Math.trunc((bits[guesses.length - 1] - bits_remaining) * 100) / 100) + " bits";
 
-                valid_remaining_guesses = await get_valid_remaining_guesses(previous_guesses, feedback_list, valid_remaining_guesses);
-
-                let bits_remaining = Math.log2(valid_remaining_guesses.length)
-                bits_remaining = Math.trunc(bits_remaining * 100) / 100
-                bits.push(bits_remaining)
-                tile.textContent = valid_remaining_guesses.length + " possibilities, " + bits_remaining + " bits";
-
-                // update actual bits tile
-                tile = document.getElementById(`row-${currentRow - 1}-actual-bits`);
-                tile.textContent = (Math.trunc((bits[guesses.length - 1] - bits_remaining) * 100) / 100) + " bits";
-
-                // re rank guesses 
-                isWaiting = true;
-                console.log("Sending to API: secret words:", secret_words, " valid remaining guesses: ", valid_remaining_guesses)
-                let guesses_ranked = {};
-                try {
-                    guesses_ranked = await rank_guesses(secret_words, valid_remaining_guesses);
-                    console.log('Top guesses:', guesses_ranked);
-                } catch (e) {
-                    console.error("Failed to rank guesses:", e);
-                } finally {
-                    isWaiting = false;
-                }
-
-                let entries = Object.entries(guesses_ranked);
+            // re rank guesses 
+            isWaiting = true;
+            console.log("Sending to API: secret words:", secret_words, " valid remaining guesses: ", valid_remaining_guesses)
+            let guesses_ranked = {};
+            try {
+                guesses_ranked = await rank_guesses(secret_words, valid_remaining_guesses);
                 console.log('Top guesses:', guesses_ranked);
+            } catch (e) {
+                console.error("Failed to rank guesses:", e);
+            } finally {
+                isWaiting = false;
+            }
 
-                // reset tile contents
-                for (let i = 0; i < 6; i++) {
-                    tile = document.getElementById(`row-${i}-top-picks`);
-                    tile.classList.remove("fly-in");
-                    tile.classList.add("fly-out");
-                    tile.textContent = " "
-                }
+            let entries = Object.entries(guesses_ranked);
+            console.log('Top guesses:', guesses_ranked);
 
-                // populate tiles
-                for (let i = 0; i < Math.min(6, entries.length); i++) {
-                    const [guess, entropy] = entries[i];
-                    tile = document.getElementById(`row-${i}-top-picks`);
-                    tile.classList.remove("fly-in", "fly-out");
+            // reset tile contents
+            for (let i = 0; i < 6; i++) {
+                tile = document.getElementById(`row-${i}-top-picks`);
+                tile.classList.remove("fly-in");
+                tile.classList.add("fly-out");
+                tile.textContent = " "
+            }
 
-                    void tile.offsetWidth; // force reflow 
-                    tile.classList.add("fly-in");
-                    tile.textContent = `${guess}, ${entropy.toFixed(2)} bits`;
-                }
+            // populate tiles
+            for (let i = 0; i < Math.min(6, entries.length); i++) {
+                const [guess, entropy] = entries[i];
+                tile = document.getElementById(`row-${i}-top-picks`);
+                tile.classList.remove("fly-in", "fly-out");
+
+                void tile.offsetWidth; // force reflow 
+                tile.classList.add("fly-in");
+                tile.textContent = `${guess}, ${entropy.toFixed(2)} bits`;
             }
         }
-        else if (key === 'Backspace' && currentGuess.length != 0) {
-            event.preventDefault(); // prevents the default action of going to the previous page (?)
-            updateTileBackspace(currentRow, currentGuess.length - 1, '');
-            currentGuess = currentGuess.slice(0, -1);
-            console.log('Deleted. Current guess:', currentGuess);
+    }
+    else if (key === 'Backspace' && currentGuess.length != 0) {
+        event.preventDefault(); // prevents the default action of going to the previous page (?)
+        updateTileBackspace(currentRow, currentGuess.length - 1, '');
+        currentGuess = currentGuess.slice(0, -1);
+        console.log('Deleted. Current guess:', currentGuess);
+    }
+    else if (/^[a-zA-Z]$/.test(key)) {
+        if (currentGuess.length < MAX_WORD_LENGTH) {
+            updateTileLetter(currentRow, currentGuess.length, key.toUpperCase());
+            currentGuess += key.toUpperCase();
+            console.log('Added letter:', key.toUpperCase(), 'Current guess:', currentGuess);
         }
-        else if (/^[a-zA-Z]$/.test(key)) {
-            if (currentGuess.length < MAX_WORD_LENGTH) {
-                updateTileLetter(currentRow, currentGuess.length, key.toUpperCase());
-                currentGuess += key.toUpperCase();
-                console.log('Added letter:', key.toUpperCase(), 'Current guess:', currentGuess);
-            }
-        }
-        if (currentRow === 7) {
-            endGame(false, secretWord);
-            return;
-        }
-    })
+    }
+    if (currentRow === 7) {
+        endGame(false, secretWord);
+        return;
+    }
+})
 
-    document.getElementById("restart-button").addEventListener("click", () => {
-        location.reload();
-    });
+document.getElementById("restart-button").addEventListener("click", () => {
+    location.reload();
+});
