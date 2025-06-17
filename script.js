@@ -133,6 +133,10 @@ async function get_valid_remaining_guesses(guesses, feedback, current_possible_a
     */
     let fetchError = null;
     let result = null;
+    if (!valid_remaining_guesses || valid_remaining_guesses.length === 0) {
+        console.warn("No valid remaining guesses returned.");
+        return;
+    }
 
     try {
         const response = await fetch('https://wordle-5rl4.onrender.com/get_remaining_guesses', {
@@ -247,7 +251,7 @@ document.addEventListener('keydown', async function (event) {
             // update posibilities / uncertainty box 
             let tile = document.getElementById(`row-${currentRow}-pos-bits`);
 
-            valid_remaining_guesses = get_valid_remaining_guesses(previous_guesses, feedback_list, valid_remaining_guesses);
+            valid_remaining_guesses = await get_valid_remaining_guesses(previous_guesses, feedback_list, valid_remaining_guesses);
 
             let bits_remaining = Math.log2(valid_remaining_guesses.length)
             bits_remaining = Math.trunc(bits_remaining * 100) / 100
