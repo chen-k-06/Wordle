@@ -73,9 +73,10 @@ button:hover {
     justify-content: center;
     color: white;
     margin: 5px;
-    font-weight: bolder;
-    backface-visibility: hidden;
+    transform-style: preserve-3d;
     perspective: 1000px;
+    position: relative;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .empty-box {
@@ -117,31 +118,18 @@ button:hover {
     border: 2px solid white;
 }
 
-.flip-in {
-    animation: flip-in 0.5s ease-in-out forwards;
+.flip {
+    animation: flip 0.5s ease-in-out forwards;
+    transform-style: preserve-3d;
 }
 
-.flip-out {
-    animation: flip-out 0.5s ease-in-out forwards;
-}
-
-@keyframes flip-in {
+@keyframes flip {
     0% {
         transform: rotateX(0deg);
     }
 
     100% {
         transform: rotateX(180deg);
-    }
-}
-
-@keyframes flip-out {
-    0% {
-        transform: rotateX(180deg);
-    }
-
-    100% {
-        transform: rotateX(360deg);
     }
 }
 

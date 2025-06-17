@@ -234,18 +234,17 @@ document.addEventListener('keydown', async function (event) {
                 let tile = document.getElementById(`row-${currentRow}-col-${i}`);
                 tile.classList.add('flip-in');
 
-                if (feedback[i] === '0') {
-                    tile.classList.add('notIncluded');
-                }
-                else if (feedback[i] === '2') {
-                    tile.classList.add('correct');
-                }
-                else {
-                    tile.classList.add('included');
-                }
-                tile.classList.remove('filled');
-                tile.classList.remove('flip-in');
-                tile.classList.add('flip-out');
+                setTimeout(() => {
+                    tile.classList.remove('filled');
+
+                    if (feedback[i] === '0') {
+                        tile.classList.add('notIncluded');
+                    } else if (feedback[i] === '2') {
+                        tile.classList.add('correct');
+                    } else {
+                        tile.classList.add('included');
+                    }
+                }, 250);
             }
             if (feedback === "22222") { // checks for win
                 endGame(true, secretWord);
