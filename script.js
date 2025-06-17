@@ -247,7 +247,7 @@ document.addEventListener('keydown', async function (event) {
             // update posibilities / uncertainty box 
             let tile = document.getElementById(`row-${currentRow}-pos-bits`);
 
-            valid_remaining_guesses = get_valid_remaining_guesses(previous_guesses, feedback_list, valid_remaining_guesses, feedback_cache);
+            valid_remaining_guesses = get_valid_remaining_guesses(previous_guesses, feedback_list, valid_remaining_guesses);
 
             let bits_remaining = Math.log2(valid_remaining_guesses.length)
             bits_remaining = Math.trunc(bits_remaining * 100) / 100
