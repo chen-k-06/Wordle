@@ -188,12 +188,13 @@ let guesses = []
 let feedbacks = []
 let bits = []
 bits.push(13.66)
+let isWaiting = false; // flag to prevent 'enter' before rank_guesses() returns
 
 document.addEventListener('keydown', async function (event) {
     let key = event.key;
 
     if (key === 'Enter') {
-        if (currentGuess != null && currentGuess.length === MAX_WORD_LENGTH && secret_words.includes(currentGuess)) {
+        if (isWaiting == false && currentGuess != null && currentGuess.length === MAX_WORD_LENGTH && secret_words.includes(currentGuess)) {
             console.log('Submitting guess:', currentGuess);
             let feedback = get_feedback(currentGuess, secretWord);
             console.log('Feedback:', feedback);
@@ -243,8 +244,18 @@ document.addEventListener('keydown', async function (event) {
             tile.textContent = (Math.trunc((bits[guesses.length - 1] - bits_remaining) * 100) / 100) + " bits";
 
             // re rank guesses 
+            isWaiting = true;
             console.log("Sending to API: secret words:", secret_words, " valid remaining guesses: ", valid_remaining_guesses)
-            let guesses_ranked = await rank_guesses(secret_words, valid_remaining_guesses);
+            let guesses_ranked = {};
+            try {
+                guesses_ranked = await rank_guesses(secret_words, valid_remaining_guesses);
+                console.log('Top guesses:', guesses_ranked);
+            } catch (e) {
+                console.error("Failed to rank guesses:", e);
+            } finally {
+                isWaiting = false;
+            }
+
             let entries = Object.entries(guesses_ranked);
             console.log('Top guesses:', guesses_ranked);
 
