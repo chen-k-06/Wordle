@@ -308,7 +308,7 @@ document.getElementById("help-button").addEventListener("click", () => {
     console.log('Help button was clicked!');
     const help_popup = document.getElementById("help-popup");
     const message = document.getElementById("help-message");
-    message.textContent = `Wordle is a web-based word game developed by Josh Wardle.<br>
+    message.innerHTML = `Wordle is a web-based word game developed by Josh Wardle.<br>
     Players have six attempts to guess a five-letter secret word, with feedback given for each guess.<br>
     <br>
     A green tile signifies that that letter exists, in that position, in the secret word.<br>
