@@ -304,7 +304,7 @@ document.addEventListener('keydown', async function (event) {
 })
 
 // help button event listener 
-document.getElementById("'help-button").addEventListener("click", () => {
+document.getElementById("help-button").addEventListener("click", () => {
     console.log('Help button was clicked!');
     const help_popup = document.getElementById("help-popup");
     const message = document.getElementById("help-popup-content");
