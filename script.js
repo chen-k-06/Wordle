@@ -308,19 +308,19 @@ document.getElementById("help-button").addEventListener("click", () => {
     console.log('Help button was clicked!');
     const help_popup = document.getElementById("help-popup");
     const message = document.getElementById("help-message");
-    message.textContent = `Wordle is a web-based word game developed by Josh Wardle. \n
-    Players have six attempts to guess a five-letter secret word, with feedback given for each guess.\n
-    \n
-    A green tile signifies that that letter exists, in that position, in the secret word.\n
-    A yellow tile means that letter is in the secret word, but not in that spot.\n
-    And a grey tile means that letter isnt in the secret word at all.\n
-    \n
-    Also shown are optimal possible guesses and how many bits of information they provide. \n
-    Here, we define a bit of information to = -log2(p), where p is the probabilty of an event. \n
-    Therefore, the more information-- bits-- a guess is estimated to provide, the better a guess it is.\n
-    \n
-    After you enter your answer, the amount of actual bits of information gained from that guess will \n
-    appear in red on the right. The number of bits remaining in the word list, along with how many words \n
+    message.textContent = `Wordle is a web-based word game developed by Josh Wardle.<br>
+    Players have six attempts to guess a five-letter secret word, with feedback given for each guess.<br>
+    <br>
+    A green tile signifies that that letter exists, in that position, in the secret word.<br>
+    A yellow tile means that letter is in the secret word, but not in that spot.<br>
+    And a grey tile means that letter isnt in the secret word at all.<br>
+    <br>
+    Also shown are optimal possible guesses and how many bits of information they provide. <br>
+    Here, we define a bit of information to = -log2(p), where p is the probabilty of an event. <br>
+    Therefore, the more information-- bits-- a guess is estimated to provide, the better a guess it is.<br>
+    <br>
+    After you enter your answer, the amount of actual bits of information gained from that guess will <br>
+    appear in red on the right. The number of bits remaining in the word list, along with how many words <br>
     are still eligble to be the secret word, will appear on the left.`
     help_popup.classList.remove("hidden");
 });
