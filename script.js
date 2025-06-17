@@ -233,15 +233,22 @@ document.addEventListener('keydown', async function (event) {
             for (let i = 0; i < MAX_WORD_LENGTH; i++) {
                 let tile = document.getElementById(`row-${currentRow}-col-${i}`);
                 tile.classList.remove('filled');
+                tile.classList.add('revealed');
 
                 if (feedback[i] === '0') {
-                    tile.classList.add('notIncluded');
+                    setTimeout(() => {
+                        tile.classList.add('notIncluded');
+                    }, 500);
                 }
                 else if (feedback[i] === '2') {
-                    tile.classList.add('correct');
+                    setTimeout(() => {
+                        tile.classList.add('correct');
+                    }, 500);
                 }
                 else {
-                    tile.classList.add('included');
+                    setTimeout(() => {
+                        tile.classList.add('included');
+                    }, 500);
                 }
             }
             if (feedback === "22222") { // checks for win
