@@ -6,15 +6,26 @@ API server
 import { get_secret_words } from './wordle_secret_words.js';
 let secret_words = get_secret_words();
 
-// picks a secret word for a game
 function get_secret_word() {
+    /**
+     * Returns a random secret word from the list of secret words.
+     *
+     * @returns {string} The secret word.
+     */
+
     let secret_word = secret_words[Math.floor(Math.random() * secret_words.length)].trim();
     console.log("Secret word: ", secret_word)
     return secret_word;
 }
 
-// displays end of game documentation
+// displays end of game popup 
 function endGame(won) {
+    /**
+     * Calculates the square of a number.
+     *
+     * @param {boolean} won - Signifies if the secret word was successfully guessed before 6 guesses.
+     */
+
     const popup = document.getElementById("endgame-popup");
     const message = document.getElementById("endgame-message");
 
@@ -32,20 +43,18 @@ function endGame(won) {
 
 
 function get_feedback(guess, secret_word) {
-    /*Generates a feedback string based on comparing a 5-letter guess with the secret word. 
-       The feedback string uses the following schema: 
+    /**
+    Generates a feedback string based on comparing a 5-letter guess with the secret word. 
+    The feedback string uses the following schema: 
         - Correct letter, correct spot: 2
         - Correct letter, wrong spot: 1
         - Letter not in the word: 0
- 
-        Args:
-            guess (str): The guessed word
-            secret_word (str): The secret word
- 
-        Returns:
-            str: Feedback string, based on comparing guess with the secret word
-    
-        Examples
+    *
+    * @param {string} guess - The guessed word
+    * @param {string} secret_word - The secret word
+    * @returns {string} - Feedback string, based on comparing guess with the secret word
+    * 
+    * Examples
         >>> get_pattern("lever", "EATEN")
                 "01020"
             
@@ -57,7 +66,8 @@ function get_feedback(guess, secret_word) {
             
         >>> get_pattern("ARGUE", "MOTTO")
                 "00000"
-    */
+      */
+
     guess = guess.toUpperCase();
     secret_word = secret_word.toUpperCase();
 
@@ -94,32 +104,45 @@ let secretWord = get_secret_word();
 
 // updates the tile to be the correct letter
 function updateTileLetter(row, column, letter) {
+    /**
+     * Updates the tile with the correct letter
+     *
+     * @param {string} row - The row number
+     * @param {string} column - The column number
+     * @param {string} letter - The letter
+     */
+
     let tile = document.getElementById(`row-${row}-col-${column}`);
     tile.textContent = letter
     tile.classList.add('filled');
 }
 
-// updates the tile to be empty
 function updateTileBackspace(row, column, letter) {
+    /**
+     * Deletes any content currently in the tile
+     *
+     * @param {string} row - The row number
+     * @param {string} column - The column number
+     * @param {string} letter - The letter. Always = ' '
+     */
+
     let tile = document.getElementById(`row-${row}-col-${column}`);
     tile.textContent = letter
     tile.classList.remove('filled');
 }
 
-// API functions 
 async function get_valid_remaining_guesses(guesses, feedback, current_possible_answers) {
-    /*Reduces the list of possible answers based on the most recent feedback. Returns a new list of 
+    /**
+     * Calls the API. Reduces the list of possible answers based on the most recent feedback. Returns a new list of 
        possible answers that is a subset of current_possible_answers
-        
-        Args:
-         guesses (list): A list of string guesses, which could be empty
-         feedback (list): A list of feedback strings, which could be empty
-         possible_answers (list): a list of possible words that could be the secret word, 
+     *
+     * @param {string[]} guesses - A list of string guesses, which could be empty
+     * @param {string[]} feedback - A list of feedback strings, which could be empty
+     * @param {string[]} current_possible_answers - a list of possible words that could be the secret word, 
             not yet updated based on most recent feedback. Cannot be empty.
- 
-        Returns:
-         possible_answers (list): a list of remaining possible words that could be the secret word
-    */
+     * @returns {string[]} The reduced list of possible secret words
+     */
+
     let fetchError = null;
     let result = null;
     if (!valid_remaining_guesses || valid_remaining_guesses.length === 0) {
@@ -150,6 +173,15 @@ async function get_valid_remaining_guesses(guesses, feedback, current_possible_a
 }
 
 async function rank_guesses(possible_guesses, possible_answers) {
+    /**
+     * Calls the API. Ranks all possible guesses based on expected information, taking possible answers
+     * into account. 
+     *
+     * @param {string[]} possible_guesses - a list of all valid guesses. Will not be empty
+     * @param {string[]} possible_answers - a list of all words that could be the secret word. Will not be empty
+
+     * @returns {Object.<string, number>} A dictionary of possible guesses sorted by entropy
+     */
     let fetchError = null;
     let result = null;
 
@@ -175,6 +207,10 @@ async function rank_guesses(possible_guesses, possible_answers) {
 }
 
 window.onload = async function () {
+    /**
+     * When the webpage loads, ping the server. If unsuccessful, try again after 5 seconds.
+     */
+
     try {
         const pingResponse = await fetch('https://wordle-5rl4.onrender.com/');
         console.log("Pinged server:", pingResponse.status);
@@ -200,16 +236,17 @@ document.addEventListener('keydown', async function (event) {
 
     if (key === 'Enter') {
         if (isWaiting == false && currentGuess != null && currentGuess.length === MAX_WORD_LENGTH && secret_words.includes(currentGuess)) {
+            // get feedback. log all relevant values into lists
             console.log('Submitting guess:', currentGuess);
             let feedback = get_feedback(currentGuess, secretWord);
             console.log('Feedback:', feedback);
             feedbacks.push(feedback)
             guesses.push(currentGuess)
 
-            // debugging
             let previous_guesses = guesses;
             let feedback_list = feedbacks;
 
+            // color tiles
             for (let i = 0; i < MAX_WORD_LENGTH; i++) {
                 let tile = document.getElementById(`row-${currentRow}-col-${i}`);
                 tile.classList.add('flip-in');
@@ -226,7 +263,9 @@ document.addEventListener('keydown', async function (event) {
                     }
                 }, 250);
             }
-            if (feedback === "22222") { // checks for win
+
+            // check for win
+            if (feedback === "22222") {
                 endGame(true, secretWord);
                 return;
             }
@@ -248,7 +287,7 @@ document.addEventListener('keydown', async function (event) {
             tile = document.getElementById(`row-${currentRow - 1}-actual-bits`);
             tile.textContent = (Math.trunc((bits[guesses.length - 1] - bits_remaining) * 100) / 100) + " bits";
 
-            // re rank guesses 
+            // re rank guesses
             isWaiting = true;
             console.log("Sending to API: secret words:", secret_words, " valid remaining guesses: ", valid_remaining_guesses)
             let guesses_ranked = {};
@@ -264,7 +303,7 @@ document.addEventListener('keydown', async function (event) {
             let entries = Object.entries(guesses_ranked);
             console.log('Top guesses:', guesses_ranked);
 
-            // reset tile contents
+            // reset right sidebar contents
             for (let i = 0; i < 6; i++) {
                 tile = document.getElementById(`row-${i}-top-picks`);
                 tile.classList.remove("fly-in");
@@ -272,7 +311,7 @@ document.addEventListener('keydown', async function (event) {
                 tile.textContent = " "
             }
 
-            // populate tiles
+            // update right sidebar with new ranked guesses
             for (let i = 0; i < Math.min(6, entries.length); i++) {
                 const [guess, entropy] = entries[i];
                 tile = document.getElementById(`row-${i}-top-picks`);
@@ -284,12 +323,16 @@ document.addEventListener('keydown', async function (event) {
             }
         }
     }
+
+    // backspace key logic 
     else if (key === 'Backspace' && currentGuess.length != 0) {
         event.preventDefault(); // prevents the default action of going to the previous page (?)
         updateTileBackspace(currentRow, currentGuess.length - 1, '');
         currentGuess = currentGuess.slice(0, -1);
         console.log('Deleted. Current guess:', currentGuess);
     }
+
+    // letter key logic
     else if (/^[a-zA-Z]$/.test(key)) {
         if (currentGuess.length < MAX_WORD_LENGTH) {
             updateTileLetter(currentRow, currentGuess.length, key.toUpperCase());
@@ -297,6 +340,8 @@ document.addEventListener('keydown', async function (event) {
             console.log('Added letter:', key.toUpperCase(), 'Current guess:', currentGuess);
         }
     }
+
+    // if max guesses exceeded, game over
     if (currentRow === 7) {
         endGame(false, secretWord);
         return;
@@ -305,23 +350,24 @@ document.addEventListener('keydown', async function (event) {
 
 // help button event listener 
 document.getElementById("help-button").addEventListener("click", () => {
+
+    // if the help button is click, display the popup with the relevant game information
     console.log('Help button was clicked!');
     const help_popup = document.getElementById("help-popup");
     const message = document.getElementById("help-message");
     message.innerHTML = `Wordle is a web-based word game developed by Josh Wardle.<br>
     Players have six attempts to guess a five-letter secret word, with feedback given for each guess.<br>
     <br>
-    A green tile signifies that that letter exists, in that position, in the secret word.<br>
-    A yellow tile means that letter is in the secret word, but not in that spot.<br>
-    And a grey tile means that letter isnt in the secret word at all.<br>
+    A green tile indicates that the letter is correct and in the right position.<br>
+    A yellow tile means the letter is in the secret word but in a different position.<br>
+    A grey tile shows that the letter does not appear in the secret word at all.<br>
     <br>
-    Shown on the left are optimal possible guesses and how many bits of information they provide. <br>
-    Information theory defines a bit of information to = -log2(p), where p is the probabilty of an event occuring. <br>
-    Therefore, the more information (bits) a guess is estimated to provide, the "better" a guess it is.<br>
+    On the left, you’ll see the optimal possible guesses along with the amount of information (in bits) each provides.<br>
+    In information theory, one bit of information is defined as −log⁡2(p), where p is the probability of an event occurring.<br>
+    Therefore, a less likely event yields more bits of information and is considered a better guess.<br>
     <br>
-    After you enter your answer, the amount of actual bits of information gained from that guess will appear in red on the right. <br>
-    The number of bits remaining in the word list, along with how many words
-    are still eligble to be the secret word, will appear on the left.`
+    After entering your guess, the actual amount of information gained (in bits) will be displayed in red on the right.<br>
+    On the left, you’ll also see how many bits of information remain in the word list and how many words are still possible candidates for the secret word.`
     help_popup.classList.remove("hidden");
 });
 
@@ -331,6 +377,7 @@ document.getElementById("help-close").addEventListener("click", () => {
     help_popup.classList.add("hidden");
 });
 
+// reloads the page to restart the game
 document.getElementById("restart-button").addEventListener("click", () => {
     location.reload();
 });
