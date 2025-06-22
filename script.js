@@ -266,6 +266,10 @@ document.addEventListener('keydown', async function (event) {
 
             // check for win
             if (feedback === "22222") {
+                // pause before displaying end of game popup
+                const sleepPromise = sleep(350);
+                await (sleepPromise);
+
                 endGame(true, secretWord);
                 return;
             }
@@ -343,6 +347,9 @@ document.addEventListener('keydown', async function (event) {
 
     // if max guesses exceeded, game over
     if (currentRow === 7) {
+        const sleepPromise = sleep(350);
+        await (sleepPromise);
+
         endGame(false, secretWord);
         return;
     }
@@ -381,3 +388,10 @@ document.getElementById("help-close").addEventListener("click", () => {
 document.getElementById("restart-button").addEventListener("click", () => {
     location.reload();
 });
+
+function sleep(ms) {
+    /**
+     * Sleeps for ms milliseconds
+     */
+    return (new Promise(resolve => setTimeout(resolve, ms)));
+}
