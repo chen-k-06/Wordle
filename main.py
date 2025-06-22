@@ -1,4 +1,5 @@
 # api code 
+# to - do : these functions don't need to be written out again here, you can just import them from wordle_help_functions.py
 from fastapi import FastAPI
 from pydantic import BaseModel
 from scipy.stats import entropy
