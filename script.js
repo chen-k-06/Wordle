@@ -267,7 +267,7 @@ document.addEventListener('keydown', async function (event) {
             // check for win
             if (feedback === "22222") {
                 // pause before displaying end of game popup
-                const sleepPromise = sleep(350);
+                const sleepPromise = sleep(500);
                 await (sleepPromise);
 
                 endGame(true, secretWord);
@@ -276,6 +276,16 @@ document.addEventListener('keydown', async function (event) {
 
             currentRow++;
             currentGuess = "";
+
+            // if max guesses exceeded, game over
+            if (currentRow === 7) {
+                // pause before displaying end of game popup
+                const sleepPromise = sleep(500);
+                await (sleepPromise);
+
+                endGame(false, secretWord);
+                return;
+            }
 
             // update posibilities / uncertainty box 
             let tile = document.getElementById(`row-${currentRow}-pos-bits`);
@@ -292,38 +302,40 @@ document.addEventListener('keydown', async function (event) {
             tile.textContent = (Math.trunc((bits[guesses.length - 1] - bits_remaining) * 100) / 100) + " bits";
 
             // re rank guesses
-            isWaiting = true;
-            console.log("Sending to API: secret words:", secret_words, " valid remaining guesses: ", valid_remaining_guesses)
-            let guesses_ranked = {};
-            try {
-                guesses_ranked = await rank_guesses(secret_words, valid_remaining_guesses);
+            if ((Math.trunc((bits[guesses.length - 1] - bits_remaining) * 100) / 100) != 0) {
+                isWaiting = true;
+                console.log("Sending to API: secret words:", secret_words, " valid remaining guesses: ", valid_remaining_guesses)
+                let guesses_ranked = {};
+                try {
+                    guesses_ranked = await rank_guesses(secret_words, valid_remaining_guesses);
+                    console.log('Top guesses:', guesses_ranked);
+                } catch (e) {
+                    console.error("Failed to rank guesses:", e);
+                } finally {
+                    isWaiting = false;
+                }
+
+                let entries = Object.entries(guesses_ranked);
                 console.log('Top guesses:', guesses_ranked);
-            } catch (e) {
-                console.error("Failed to rank guesses:", e);
-            } finally {
-                isWaiting = false;
-            }
 
-            let entries = Object.entries(guesses_ranked);
-            console.log('Top guesses:', guesses_ranked);
+                // reset right sidebar contents
+                for (let i = 0; i < 6; i++) {
+                    tile = document.getElementById(`row-${i}-top-picks`);
+                    tile.classList.remove("fly-in");
+                    tile.classList.add("fly-out");
+                    tile.textContent = " "
+                }
 
-            // reset right sidebar contents
-            for (let i = 0; i < 6; i++) {
-                tile = document.getElementById(`row-${i}-top-picks`);
-                tile.classList.remove("fly-in");
-                tile.classList.add("fly-out");
-                tile.textContent = " "
-            }
+                // update right sidebar with new ranked guesses
+                for (let i = 0; i < Math.min(6, entries.length); i++) {
+                    const [guess, entropy] = entries[i];
+                    tile = document.getElementById(`row-${i}-top-picks`);
+                    tile.classList.remove("fly-in", "fly-out");
 
-            // update right sidebar with new ranked guesses
-            for (let i = 0; i < Math.min(6, entries.length); i++) {
-                const [guess, entropy] = entries[i];
-                tile = document.getElementById(`row-${i}-top-picks`);
-                tile.classList.remove("fly-in", "fly-out");
-
-                void tile.offsetWidth; // force reflow 
-                tile.classList.add("fly-in");
-                tile.textContent = `${guess}, ${entropy.toFixed(2)} bits`;
+                    void tile.offsetWidth; // force reflow 
+                    tile.classList.add("fly-in");
+                    tile.textContent = `${guess}, ${entropy.toFixed(2)} bits`;
+                }
             }
         }
     }
@@ -343,15 +355,6 @@ document.addEventListener('keydown', async function (event) {
             currentGuess += key.toUpperCase();
             console.log('Added letter:', key.toUpperCase(), 'Current guess:', currentGuess);
         }
-    }
-
-    // if max guesses exceeded, game over
-    if (currentRow === 7) {
-        const sleepPromise = sleep(350);
-        await (sleepPromise);
-
-        endGame(false, secretWord);
-        return;
     }
 })
 
