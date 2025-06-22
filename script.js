@@ -278,7 +278,7 @@ document.addEventListener('keydown', async function (event) {
             currentGuess = "";
 
             // if max guesses exceeded, game over
-            if (currentRow === 7) {
+            if (currentRow === 6) {
                 // pause before displaying end of game popup
                 const sleepPromise = sleep(500);
                 await (sleepPromise);
