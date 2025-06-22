@@ -31,7 +31,7 @@ function endGame(won) {
 
     if (!won) {
         console.log("Game over. The correct answer was ", secretWord);
-        message.textContent = 'Game over. The correct answer was "${secretWord}"'
+        message.textContent = "Game over. The correct answer was \"" + secretWord + "\"";
     }
     else {
         console.log("You won!");
@@ -267,7 +267,7 @@ document.addEventListener('keydown', async function (event) {
             // check for win
             if (feedback === "22222") {
                 // pause before displaying end of game popup
-                const sleepPromise = sleep(500);
+                const sleepPromise = sleep(600);
                 await (sleepPromise);
 
                 endGame(true, secretWord);
@@ -280,7 +280,7 @@ document.addEventListener('keydown', async function (event) {
             // if max guesses exceeded, game over
             if (currentRow === 6) {
                 // pause before displaying end of game popup
-                const sleepPromise = sleep(500);
+                const sleepPromise = sleep(600);
                 await (sleepPromise);
 
                 endGame(false, secretWord);
