@@ -9,3 +9,7 @@ Code to test the bot's accuracy can be found in wordle_tester.py.
 wordle_bot_results.pdf contains a graph of the distribution of number of guesses required for every possible goal word in Wordle. 
 
 API is hosted at [https://wordle-5rl4.onrender.com].
+
+![image](https://github.com/user-attachments/assets/afed98b2-273a-47c3-98ef-c20a7906893d)
+
+
