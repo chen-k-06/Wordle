@@ -31,7 +31,7 @@ function endGame(won) {
 
     if (!won) {
         console.log("Game over. The correct answer was ", secretWord);
-        message.textContent = "Game over. The correct answer was \"" + secretWord + "\"";
+        message.textContent = "Game over. The correct answer was \"" + secretWord + "\".";
     }
     else {
         console.log("You won!");
