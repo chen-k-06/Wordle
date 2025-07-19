@@ -1,4 +1,4 @@
-/*https://wordle-5rl4.onrender.com
+/* https://api-hosting-cdnc.onrender.com
 API server 
 */
 
@@ -151,7 +151,7 @@ async function get_valid_remaining_guesses(guesses, feedback, current_possible_a
     }
 
     try {
-        const response = await fetch('https://wordle-5rl4.onrender.com/get_remaining_guesses', {
+        const response = await fetch('https://api-hosting-cdnc.onrender.com/get_remaining_guesses', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -186,7 +186,7 @@ async function rank_guesses(possible_guesses, possible_answers) {
     let result = null;
 
     try {
-        const response = await fetch('https://wordle-5rl4.onrender.com/get_entropies', {
+        const response = await fetch('https://api-hosting-cdnc.onrender.com/get_entropies', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -212,7 +212,7 @@ window.onload = async function () {
      */
 
     try {
-        const pingResponse = await fetch('https://wordle-5rl4.onrender.com/');
+        const pingResponse = await fetch('https://api-hosting-cdnc.onrender.com/');
         console.log("Pinged server:", pingResponse.status);
 
     } catch (error) {
