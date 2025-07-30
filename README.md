@@ -6,7 +6,7 @@ I've implemented an entropy-based AI bot with a 100% win rate that averages 3.57
 The web-based version of this game is hosted at [https://chen-k-06.github.io/Wordle/]. The game is also playable in the terminal using Wordle.py-- this is why there are duplicates of a lot of code in JS/Python or even in the API. 
 Code to test the bot's accuracy can be found in wordle_tester.py. 
 
-API is hosted at [https://wordle-5rl4.onrender.com].
+API is hosted at [https://api-hosting-cdnc.onrender.com].
 
 ![image](https://github.com/user-attachments/assets/afed98b2-273a-47c3-98ef-c20a7906893d)
 
