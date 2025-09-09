@@ -3,7 +3,7 @@ Wordle is a web-based word game developed by Josh Wardle. Players have six attem
 
 I've implemented an entropy-based AI bot with a 100% win rate that averages 3.57 guesses a game. Inspired by 3Blue1Brown's video on information theory: [https://www.3blue1brown.com/lessons/wordle]
 
-The web-based version of this game is hosted at [https://chen-k-06.github.io/Wordle/]. The game is also playable in the terminal using Wordle.py-- this is why there are duplicates of a lot of code in JS/Python or even in the API. 
+The web-based version of this game is hosted at [https://chen-k-06.github.io/Wordle/]. The game is also playable in the terminal using Wordle.py.
 Code to test the bot's accuracy can be found in wordle_tester.py. 
 
 API is hosted at [https://api-hosting-cdnc.onrender.com].
